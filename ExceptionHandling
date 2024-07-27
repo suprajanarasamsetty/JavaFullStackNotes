@@ -1,0 +1,78 @@
+### Exception Handling in Java
+
+**Exception:** An event that occurs during the execution of a program and disrupts the normal flow of instructions.
+
+**Exception Object:** Contains information about the error, including the type and state of the program at the time the error occurred.
+
+**Error:** Errors are typically thrown by the Java Virtual Machine (JVM) when a severe issue, such as a dynamic linking failure or other critical failure, occurs. Errors are not intended to be caught or thrown by programmers.
+
+### Types of Exceptions
+
+1. **Unchecked Exceptions:**
+   - These are exceptions that are not checked at compile time.
+   - Includes `RuntimeException` and its subclasses, as well as the `Error` class and its subclasses.
+
+2. **Checked Exceptions:**
+   - These are exceptions that are checked at compile time.
+   - Includes all exceptions that are not `RuntimeException` or `Error`.
+
+### Handling Exceptions
+
+- **try:**
+  - A block of code that might throw an exception.
+  
+- **catch:**
+  - A block of code that handles specific exceptions thrown by the try block.
+  
+- **finally:**
+  - A block of code that is always executed after the try (and possibly catch) blocks, regardless of whether an exception was thrown.
+  - Ideal for cleanup code, such as closing files and releasing resources.
+
+### Try with Resources
+
+- A try statement that declares one or more resources.
+- Ensures that each resource is closed at the end of the statement.
+- Resources are objects that must be closed after the program is finished using them (e.g., file streams, database connections).
+
+### Throws Clause
+
+- Used to declare that a method can throw an exception, allowing a method further up the call stack to handle it.
+- Primarily used for checked exceptions.
+- Not necessary for unchecked exceptions.
+
+### Custom Exceptions and the Throw Keyword
+
+- **throw:**
+  - Used to explicitly throw an exception.
+  
+- **Custom Exceptions:**
+  - Created by extending the `Exception` class.
+  - Allows you to create specific exceptions that can be used to handle unique error conditions in your program.
+
+### Example Code
+
+Here is an example of how to handle exceptions in Java:
+
+```java
+public class ExceptionHandlingExample {
+    public static void main(String[] args) {
+        try {
+            int result = divide(10, 0);
+            System.out.println("Result: " + result);
+        } catch (ArithmeticException e) {
+            System.out.println("Error: Cannot divide by zero.");
+        } finally {
+            System.out.println("Execution finished.");
+        }
+    }
+
+    public static int divide(int a, int b) throws ArithmeticException {
+        if (b == 0) {
+            throw new ArithmeticException("Division by zero is not allowed.");
+        }
+        return a / b;
+    }
+}
+```
+
+In this example, an `ArithmeticException` is thrown when an attempt is made to divide by zero. The exception is caught in the `catch` block, and a message is printed. The `finally` block is executed regardless of whether an exception was thrown, ensuring that any necessary cleanup is performed.
