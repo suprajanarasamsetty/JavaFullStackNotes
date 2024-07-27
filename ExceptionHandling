@@ -76,3 +76,78 @@ public class ExceptionHandlingExample {
 ```
 
 In this example, an `ArithmeticException` is thrown when an attempt is made to divide by zero. The exception is caught in the `catch` block, and a message is printed. The `finally` block is executed regardless of whether an exception was thrown, ensuring that any necessary cleanup is performed.
+### Types of Exceptions in Java
+
+#### Unchecked Exceptions
+
+Unchecked exceptions are those exceptions that are not checked at compile time. They occur during the runtime of the program and are not required to be declared in a method's `throws` clause.
+
+**Characteristics of Unchecked Exceptions:**
+
+- **Not Checked at Compile Time:** The compiler does not check these exceptions during the compilation of the program. Therefore, programmers are not forced to handle or declare them.
+- **Includes `RuntimeException` and Its Subclasses:** These exceptions indicate programming bugs, such as logic errors or improper use of an API.
+- **Includes `Error` and Its Subclasses:** These are serious problems that are usually not handled by the application code. They are more related to the runtime environment rather than the application's logic.
+
+**Common Unchecked Exceptions:**
+
+1. **`NullPointerException`:** Occurs when attempting to use `null` in a case where an object is required (e.g., calling a method on a `null` object).
+2. **`ArrayIndexOutOfBoundsException`:** Thrown when trying to access an array with an illegal index (either negative or greater than the array size).
+3. **`ArithmeticException`:** Occurs when an illegal arithmetic operation is performed, such as division by zero.
+4. **`IllegalArgumentException`:** Thrown when a method receives an argument formatted differently than the method expects.
+
+**Example of Unchecked Exception:**
+
+```java
+public class UncheckedExceptionExample {
+    public static void main(String[] args) {
+        String str = null;
+        System.out.println(str.length()); // This will throw NullPointerException
+    }
+}
+```
+
+In this example, the `NullPointerException` is not checked at compile time and will occur during runtime if `str` is `null`.
+
+#### Checked Exceptions
+
+Checked exceptions are those that are checked at compile time. These exceptions must be either caught using a `try-catch` block or declared in the method's `throws` clause.
+
+**Characteristics of Checked Exceptions:**
+
+- **Checked at Compile Time:** The compiler checks these exceptions during compilation, and the programmer must handle or declare them.
+- **Includes All Exceptions That Are Not `RuntimeException` or `Error`:** These exceptions are usually related to recoverable conditions and represent conditions that a reasonable application might want to catch.
+
+**Common Checked Exceptions:**
+
+1. **`IOException`:** Thrown when an I/O operation fails or is interrupted.
+2. **`SQLException`:** Thrown when there is a database access error or other errors related to SQL operations.
+3. **`ClassNotFoundException`:** Thrown when an application tries to load a class through its string name, but no definition for the class with the specified name could be found.
+4. **`FileNotFoundException`:** Thrown when an attempt to open the file denoted by a specified pathname has failed.
+
+**Example of Checked Exception:**
+
+```java
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+public class CheckedExceptionExample {
+    public static void main(String[] args) {
+        try {
+            File file = new File("nonexistentfile.txt");
+            FileInputStream fis = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + e.getMessage());
+        }
+    }
+}
+```
+
+In this example, the `FileNotFoundException` is a checked exception. The compiler forces the programmer to handle this exception, either with a `try-catch` block or by declaring it in the `throws` clause of the method.
+
+### Summary
+
+- **Unchecked Exceptions:** Not checked at compile time. Includes `RuntimeException` and its subclasses, as well as `Error` and its subclasses. Examples: `NullPointerException`, `ArrayIndexOutOfBoundsException`.
+- **Checked Exceptions:** Checked at compile time. Includes all exceptions that are not `RuntimeException` or `Error`. Examples: `IOException`, `SQLException`.
+
+Understanding the differences between these types of exceptions is crucial for writing robust and error-free Java applications.
