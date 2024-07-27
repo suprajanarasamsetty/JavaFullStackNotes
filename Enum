@@ -1,0 +1,89 @@
+### Enumerations (enum) in Java
+
+An enumeration, or `enum`, is a special data type in Java used to define collections of constants. It allows a variable to be one of a predefined set of values.
+
+**Key Points About Enums:**
+
+1. **Defining an Enum:**
+   - In Java, an `enum` is declared using the `enum` keyword.
+   - The constants in an `enum` are typically in uppercase letters to differentiate them from regular variables.
+   - Each constant in an `enum` is an instance of the `enum` type.
+
+   ```java
+   public enum Day {
+       SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+   }
+   ```
+
+2. **Enum as a Class:**
+   - An `enum` in Java is implicitly a subclass of `java.lang.Enum`.
+   - This means an `enum` type can have fields, methods, and constructors.
+   - Unlike regular classes, an `enum` cannot be instantiated directly using the `new` keyword.
+
+3. **Values Method:**
+   - The `values` method returns an array of all the constants of the `enum` type in the order they are declared.
+   
+   ```java
+   for (Day day : Day.values()) {
+       System.out.println(day);
+   }
+   ```
+
+4. **Constructors and Methods:**
+   - Since `enum` types are classes, they can have constructors, methods, and fields.
+   - The constructors in an `enum` are always `private` or package-private, ensuring that new instances cannot be created outside of the `enum`.
+
+   ```java
+   public enum Day {
+       SUNDAY("Weekend"), MONDAY("Weekday"), TUESDAY("Weekday"),
+       WEDNESDAY("Weekday"), THURSDAY("Weekday"), FRIDAY("Weekday"), SATURDAY("Weekend");
+
+       private String type;
+
+       // Constructor
+       Day(String type) {
+           this.type = type;
+       }
+
+       public String getType() {
+           return type;
+       }
+   }
+   ```
+
+5. **Enum Constants:**
+   - Each constant defined in the `enum` is an instance of the `enum` type.
+   - These constants are implicitly `public`, `static`, and `final`.
+
+6. **Cannot Extend Other Classes:**
+   - An `enum` cannot extend another class because all enums in Java implicitly extend `java.lang.Enum`.
+
+7. **Enum Usage Example:**
+
+   ```java
+   public class EnumExample {
+       public static void main(String[] args) {
+           Day today = Day.SATURDAY;
+
+           switch (today) {
+               case MONDAY:
+                   System.out.println("Start of the work week");
+                   break;
+               case SATURDAY:
+               case SUNDAY:
+                   System.out.println("Weekend!");
+                   break;
+               default:
+                   System.out.println("Midweek days");
+                   break;
+           }
+
+           // Using values method
+           for (Day day : Day.values()) {
+               System.out.println(day + ": " + day.getType());
+           }
+       }
+   }
+   ```
+
+In this example, the `Day` enum has a constructor that sets the type of each day (either "Weekday" or "Weekend"). The `main` method demonstrates how to use the `enum` in a switch statement and how to iterate over the constants using the `values` method. Each `Day` constant is an instance of the `Day` enum, and you can call methods on these instances.
