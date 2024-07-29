@@ -1,0 +1,105 @@
+### Waterfall Model
+
+The Waterfall model is a linear or sequential approach to project management that works on fixed dates, requirements, and outcomes. Each phase must be completed before the next phase begins, making it a rigid but straightforward process.
+
+**Phases of the Waterfall Model:**
+
+1. **Requirements:**
+   - All requirements for the project are gathered and documented in detail.
+   - The document includes constraints, functional and non-functional needs, project costs, assumptions, risks, dependencies, success metrics, and timelines.
+
+2. **Design:**
+   - **High-Level Design (HLD):** Describes the project’s purpose, scope, and general flow of each component, as well as integration points.
+   - **Detailed Design:** Provides precise details allowing subject matter experts (SMEs) to implement the HLD.
+
+3. **Implementation:**
+   - Development teams create, code, implement, and test the solution based on the design documents.
+
+4. **Verification:**
+   - Acceptance tests are conducted to ensure the project meets all initial requirements.
+   - If requirements are not met, a review determines necessary corrective actions.
+
+5. **Maintenance:**
+   - Post-deployment, any defects are addressed, and new versions or updates are managed.
+
+**Benefits of the Waterfall Model:**
+- Cost and timeline can be determined at the beginning since the project scope is static.
+- The cost to fix or alter designs is minimized.
+- SME's can effectively plan their time, ensuring a structured approach where everyone knows what to do and when.
+- Fewer meetings and more independent work environment.
+- Detailed documentation allows for flexibility in team member changes.
+
+**Drawbacks of the Waterfall Model:**
+- New changes are hard to incorporate.
+- The pace is relatively slow and not suitable for rapid releases.
+- Difficult to estimate exact time as any new change will lead to repetition of the process.
+
+### Agile Methodology
+
+Agile methodology promotes iterative development with incremental releases. It is iterative because it plans for work to be improved upon in subsequent iterations and incremental because completed work is delivered throughout the project.
+
+**Values and Principles of Agile:**
+
+**Values:**
+- Individuals and interactions over processes and tools.
+- Working software over comprehensive documentation.
+- Customer collaboration over contract negotiation.
+- Responding to change over following a plan.
+
+**Principles:**
+- Customer satisfaction through early and continuous software delivery.
+- Accommodate changing requirements throughout development.
+- Frequent delivery of working software.
+- Close collaboration between business stakeholders and developers.
+- Support, trust, and motivation for people involved.
+- Enable face-to-face interactions.
+- Working software is the primary measure of progress.
+- Agile processes support a consistent development pace.
+- Attention to technical detail and design enhances agility.
+- Simplicity.
+- Self-organizing teams encourage great architectures, requirements, and designs.
+- Regular reflections on how to become more effective.
+
+**Agile Terminology:**
+
+- **Feature:** A distinct piece of functionality or behavior in a software product that provides value to users or customers.
+- **Enhancement:** An improvement or addition to an existing feature or functionality.
+- **Bug:** An error, flaw, or unintended behavior in a software product.
+- **Epic:** A large body of work that cannot be completed within a single iteration or sprint.
+- **User Story:** A concise description of a feature or functionality from the perspective of a user.
+- **Task:** The smallest unit of work required to complete a user story or an epic.
+
+### Agile vs Waterfall
+
+**Waterfall:**
+- Linear and sequential.
+- Fixed dates, requirements, and outcomes.
+- Each phase must be completed before moving to the next.
+
+**Agile:**
+- Iterative and incremental.
+- Values individuals and interactions, working software, customer collaboration, and response to change.
+- Encourages early and continuous delivery, frequent updates, and flexibility.
+
+### Scrum Methodology (A type of Agile methodology)
+
+**Scrum Framework Activities:**
+- Requirements, analysis, design, evolution, and delivery.
+
+**Scrum Roles:**
+- **Product Owner:** Represents stakeholders and the customer.
+- **Development Team:** Professionals who deliver the product.
+- **Scrum Master:** Ensures understanding and execution of Scrum.
+
+**Scrum Events:**
+- **Sprint:** Iterative time boxes where a goal is accomplished.
+- **Sprint Planning:** Planning the upcoming sprint.
+- **Daily Scrum:** A 15-minute daily meeting to discuss progress and obstacles.
+- **Sprint Execution:** Development team works on tasks from the Sprint Backlog.
+- **Sprint Review:** Presenting the increment to stakeholders and discussing feedback.
+- **Sprint Retrospective:** Reflecting on the previous sprint and planning improvements.
+
+**Story Pointing:**
+- A technique used to estimate the relative effort or complexity of user stories, often using the Fibonacci sequence.
+
+In summary, Waterfall and Agile represent two fundamentally different approaches to software development, each with its own set of practices, benefits, and drawbacks. The choice between them depends on the project’s requirements, the need for flexibility, and the desired pace of development.
