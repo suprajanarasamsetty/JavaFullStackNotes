@@ -1,0 +1,145 @@
+### Introduction to Git and Version Control
+
+**Versioning**:
+Consider working on an essay for school. You create a draft and save it. After making changes, instead of overwriting the original, you save the new version as "draft 2." This approach keeps the original intact, allowing you to reference or revert to it if needed. Now imagine this scenario applied to a software development project involving multiple files and collaborators. Tracking changes and versions becomes complex, making a version control system (VCS) essential.
+
+**Semantic Versioning**:
+Semantic versioning follows the format `Major.Minor.Patch`. Each part of this version number signifies different types of changes:
+- **Major**: Significant changes that may break backward compatibility.
+- **Minor**: New features that are backward compatible.
+- **Patch**: Bug fixes or minor changes that are backward compatible.
+
+For example:
+- **1.0.0**: Initial release with basic functionalities.
+- **1.1.0**: Added a camera to the drone, a minor update.
+- **1.1.1**: Added the ability to rotate left/right, a patch update.
+- **2.0.0**: Changed the drone's purpose to spraying pesticides, a major update.
+
+### Version Control System (VCS)
+VCS helps manage changes to source code over time. There are two types:
+
+1. **Centralized VCS (CVCS)**:
+   - **Centralized**: One central server contains the repository. Clients check out, make changes, and commit back to this central repository.
+   - **Examples**: CVS, Subversion.
+
+2. **Distributed VCS (DVCS)**:
+   - **Distributed**: Each developer has a local copy of the entire repository. Changes can be committed locally and then pushed to a central repository.
+   - **Examples**: Git, Mercurial.
+
+### Git: A Distributed Version Control System
+**Git** is a free and open-source DVCS known for its speed and efficiency. To install Git, visit [Git Downloads](https://git-scm.com/downloads). After installation, verify it with:
+```sh
+git --version
+```
+
+**Initial Configuration**:
+Configure Git with your user information:
+```sh
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+git config --global core.editor "code --wait" # Set Visual Studio Code as the default editor
+git config --global core.autocrlf true # For Windows
+git config --global core.autocrlf input # For Mac
+```
+
+### Git Workflow
+**Working Directory**: Files and folders on your local system.
+**Staging Area**: An intermediate area where changes are reviewed before committing.
+**Repository**: The storage of all versions of the project's files. This can be local or remote (e.g., GitHub).
+
+**Basic Git Commands**:
+1. **Initialize a repository**:
+   ```sh
+   git init
+   ```
+
+2. **Add files to the staging area**:
+   ```sh
+   git add filename
+   git add . # Add all changes
+   ```
+
+3. **Commit changes**:
+   ```sh
+   git commit -m "Your commit message"
+   ```
+
+4. **View the status of the repository**:
+   ```sh
+   git status
+   ```
+
+5. **View the commit history**:
+   ```sh
+   git log
+   ```
+
+6. **Create a new branch**:
+   ```sh
+   git branch branch-name
+   ```
+
+7. **Switch to another branch**:
+   ```sh
+   git checkout branch-name
+   ```
+
+### Managing Remote Repositories
+**Connecting to a Remote Repository**:
+1. **Clone a repository**:
+   ```sh
+   git clone repository-url
+   ```
+
+2. **Add a remote repository**:
+   ```sh
+   git remote add origin repository-url
+   ```
+
+3. **Fetch changes from the remote repository**:
+   ```sh
+   git fetch
+   ```
+
+4. **Merge fetched changes**:
+   ```sh
+   git merge
+   ```
+
+5. **Pull changes (fetch + merge)**:
+   ```sh
+   git pull
+   ```
+
+6. **Push local changes to the remote repository**:
+   ```sh
+   git push
+   ```
+
+### Advanced Git Concepts
+1. **Stashing Changes**:
+   Temporarily save changes without committing:
+   ```sh
+   git stash
+   git stash pop # Reapply stashed changes
+   ```
+
+2. **Restoring Files**:
+   Restore the last committed state of a file:
+   ```sh
+   git restore --source=HEAD~1 filename
+   ```
+
+3. **Ignoring Files**:
+   Add files to `.gitignore` to prevent tracking:
+   ```sh
+   echo "filename" >> .gitignore
+   ```
+
+### Best Practices
+1. Commit small, logical changes with clear messages.
+2. Regularly push changes to the remote repository.
+3. Use branches for feature development and bug fixes.
+4. Regularly merge changes from the main branch to avoid conflicts.
+
+For additional information on Git commands, you can refer to the official [Git documentation](https://git-scm.com/doc).
