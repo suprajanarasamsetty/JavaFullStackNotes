@@ -1,0 +1,100 @@
+A **subquery** (also known as an inner query or nested query) is a SQL query embedded within another SQL query. The main query is called the outer query, and the subquery provides a result set that is used by the outer query.
+
+### Types of Subqueries
+
+1. **Single-Row Subquery**
+2. **Multiple-Row Subquery**
+3. **Correlated Subquery**
+4. **Nested Subquery**
+
+### 1. Single-Row Subquery
+A **single-row subquery** returns only one row. It is often used with comparison operators such as `=`, `>`, `<`, etc.
+
+**Example:**
+Find the employees who work in the same department as 'John'.
+```sql
+SELECT EmployeeName
+FROM Employees
+WHERE DeptID = (SELECT DeptID FROM Employees WHERE EmployeeName = 'John');
+```
+
+### 2. Multiple-Row Subquery
+A **multiple-row subquery** returns more than one row. It is used with operators such as `IN`, `ANY`, `ALL`.
+
+**Example:**
+Find employees who work in any of the departments where 'Alice' works.
+```sql
+SELECT EmployeeName
+FROM Employees
+WHERE DeptID IN (SELECT DeptID FROM Employees WHERE EmployeeName = 'Alice');
+```
+
+### 3. Correlated Subquery
+A **correlated subquery** is a subquery that references a column from the outer query. It is evaluated once for each row processed by the outer query.
+
+**Example:**
+Find employees who earn more than the average salary in their department.
+```sql
+SELECT EmployeeName, Salary
+FROM Employees e1
+WHERE Salary > (SELECT AVG(Salary) 
+                FROM Employees e2 
+                WHERE e1.DeptID = e2.DeptID);
+```
+
+### 4. Nested Subquery
+A **nested subquery** is a subquery within another subquery.
+
+**Example:**
+Find employees who work in the same department as the employee with the highest salary.
+```sql
+SELECT EmployeeName
+FROM Employees
+WHERE DeptID = (SELECT DeptID 
+                FROM Employees 
+                WHERE Salary = (SELECT MAX(Salary) FROM Employees));
+```
+
+### Benefits of Using Subqueries
+- **Modularity**: Breaks down complex queries into simpler parts.
+- **Readability**: Makes queries easier to read and understand.
+- **Flexibility**: Allows for more dynamic and complex query conditions.
+
+### Subquery vs. Join
+While subqueries and joins can often be used interchangeably, they have their own use cases:
+- **Subqueries** are generally more readable and are good for breaking down complex problems.
+- **Joins** are more efficient for combining tables and can be optimized better by the SQL engine.
+
+### Example Table Structures
+
+**Employees:**
+| EmployeeID | EmployeeName | DeptID | Salary |
+|------------|--------------|--------|--------|
+| 1          | John         | 1      | 50000  |
+| 2          | Jane         | 2      | 60000  |
+| 3          | Alice        | 1      | 55000  |
+| 4          | Bob          | 2      | 70000  |
+
+**Departments:**
+| DeptID | DeptName |
+|--------|----------|
+| 1      | HR       |
+| 2      | IT       |
+
+### Example Use Cases
+
+1. **Find the employee with the highest salary:**
+   ```sql
+   SELECT EmployeeName
+   FROM Employees
+   WHERE Salary = (SELECT MAX(Salary) FROM Employees);
+   ```
+
+2. **Find the departments that have employees earning more than $60,000:**
+   ```sql
+   SELECT DISTINCT DeptName
+   FROM Departments
+   WHERE DeptID IN (SELECT DeptID FROM Employees WHERE Salary > 60000);
+   ```
+
+Subqueries are powerful tools in SQL that can make queries more flexible and easier to manage. They are essential for performing complex queries and are widely used in database management systems.
