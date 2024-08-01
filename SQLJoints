@@ -1,0 +1,105 @@
+Sure, let's delve deeper into each type of join with detailed explanations and examples:
+
+### 1. Cross Join (Cartesian Product)
+A **Cross Join** produces the Cartesian product of the two tables, meaning it returns all possible combinations of rows from both tables. This join does not require any condition and is rarely used on its own due to the large number of resulting rows.
+
+**Syntax:**
+```sql
+SELECT *
+FROM TableA
+CROSS JOIN TableB;
+```
+
+**Example:**
+Consider two tables, `Customers` and `Orders`:
+
+**Customers:**
+| CustomerID | CustomerName |
+|------------|--------------|
+| 1          | John         |
+| 2          | Jane         |
+
+**Orders:**
+| OrderID | Product |
+|---------|---------|
+| 101     | Laptop  |
+| 102     | Phone   |
+
+A cross join between `Customers` and `Orders` will result in:
+| CustomerID | CustomerName | OrderID | Product |
+|------------|--------------|---------|---------|
+| 1          | John         | 101     | Laptop  |
+| 1          | John         | 102     | Phone   |
+| 2          | Jane         | 101     | Laptop  |
+| 2          | Jane         | 102     | Phone   |
+
+### 2. Theta Join
+A **Theta Join** allows you to join tables based on a condition that uses a comparison operator other than equality. This join is more general and can be used to implement various conditions.
+
+**Syntax:**
+```sql
+SELECT *
+FROM TableA
+JOIN TableB
+ON TableA.column OPERATOR TableB.column;
+```
+**Note:** The `OPERATOR` can be `=`, `<`, `>`, `<=`, `>=`, `<>`.
+
+**Example:**
+Consider the tables `Employees` and `Departments`:
+
+**Employees:**
+| EmployeeID | EmployeeName | DeptID |
+|------------|--------------|--------|
+| 1          | Alice        | 1      |
+| 2          | Bob          | 2      |
+
+**Departments:**
+| DeptID | DeptName |
+|--------|----------|
+| 1      | HR       |
+| 2      | IT       |
+
+If you want to join the tables where `DeptID` is less than 2:
+```sql
+SELECT *
+FROM Employees
+JOIN Departments
+ON Employees.DeptID < Departments.DeptID;
+```
+This would return the rows where the employee's `DeptID` is less than the department's `DeptID`.
+
+### 3. Equi Join
+An **Equi Join** is a type of theta join where the join condition is based solely on the equality operator (`=`). It returns rows where there is an exact match between the specified columns of the joined tables.
+
+**Syntax:**
+```sql
+SELECT *
+FROM TableA
+JOIN TableB
+ON TableA.column = TableB.column;
+```
+
+**Example:**
+Using the same `Employees` and `Departments` tables, an equi join can be performed as follows:
+```sql
+SELECT Employees.EmployeeID, Employees.EmployeeName, Departments.DeptName
+FROM Employees
+JOIN Departments
+ON Employees.DeptID = Departments.DeptID;
+```
+
+This would result in:
+| EmployeeID | EmployeeName | DeptName |
+|------------|--------------|----------|
+| 1          | Alice        | HR       |
+| 2          | Bob          | IT       |
+
+This join ensures that only rows with matching `DeptID` values in both tables are returned.
+
+### Summary:
+- **Cross Join:** Produces a Cartesian product of the tables (all possible combinations).
+- **Theta Join:** Allows joining based on any comparison operator, providing more flexible conditions.
+- **Equi Join:** A specific type of theta join using only the equality operator for matching rows.
+
+These joins are fundamental in SQL for combining data from multiple tables based on different conditions.
