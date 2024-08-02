@@ -1,0 +1,75 @@
+ACID is an acronym that stands for Atomicity, Consistency, Isolation, and Durability. These properties ensure reliable processing of database transactions.
+
+1. **Atomicity**
+    - Any number of SQL transactions can be executed as a single unit called a transaction. If any part of the transaction fails, the entire transaction fails and the database state is left unchanged.
+
+2. **Consistency**
+    - The change in the state of the database does not cause any effects or corruption of data. Consistency is maintained using constraints, cascading effects, triggers, etc.
+
+3. **Isolation**
+    - Transactions are executed independently and in a controlled and ordered way. Isolation ensures that the concurrent execution of transactions leads to the same state that would be obtained if transactions were executed sequentially.
+
+4. **Durability**
+    - A successful transaction (change made to the database) is permanent, even if there are system failures. Once a transaction is committed, it will remain so, even in the event of a system crash.
+
+
+2. Consistency in detailed.
+Consistency in the context of ACID properties in databases refers to the assurance that a database remains in a valid state before and after a transaction. A transaction can take the database from one consistent state to another, but during the process, it must not leave the database in an inconsistent state. Let's delve into the details:
+
+### Key Aspects of Consistency
+
+1. **Integrity Constraints**
+   - **Primary Keys and Foreign Keys**: Ensures that relationships between tables are maintained correctly.
+   - **Unique Constraints**: Ensures that all values in a column are distinct.
+   - **Check Constraints**: Ensures that all values in a column satisfy a specific condition.
+   - **Not Null Constraints**: Ensures that a column cannot have NULL values.
+
+2. **Database Triggers**
+   - Triggers are special procedures that are automatically executed in response to certain events on a particular table or view. They help maintain consistency by enforcing rules, updating related tables, and checking the validity of the data.
+
+3. **Stored Procedures and Functions**
+   - These are reusable SQL code blocks that can encapsulate complex business logic. By using them, you can ensure that data modifications adhere to specific rules and constraints, thus maintaining consistency.
+
+4. **Cascading Actions**
+   - Cascading actions such as `ON DELETE CASCADE` and `ON UPDATE CASCADE` ensure that related records are updated or deleted together, maintaining referential integrity across related tables.
+
+5. **Transactions**
+   - Transactions ensure that all operations within a transaction block are completed successfully before committing the changes to the database. If any operation fails, the entire transaction is rolled back, and the database remains in its previous consistent state.
+
+### Example of Maintaining Consistency
+
+Consider a banking system where you are transferring money from one account to another:
+
+1. **Integrity Constraints**
+   - Ensure that the account numbers exist and are valid.
+   - Ensure that the transfer amount is positive and does not exceed the balance of the source account.
+
+2. **Transaction Steps**
+   - Begin the transaction.
+   - Check the balance of the source account.
+   - Deduct the amount from the source account.
+   - Add the amount to the destination account.
+   - Commit the transaction.
+
+During this transaction, the database must maintain consistency by ensuring that the total amount of money remains constant and no money is created or lost. If any step fails (e.g., insufficient funds in the source account), the transaction is rolled back, leaving the database in its original consistent state.
+
+### Maintaining Consistency in Distributed Systems
+
+In distributed systems, consistency can be more complex due to the nature of distributed transactions across multiple nodes or databases. Techniques such as:
+
+- **Two-Phase Commit (2PC)**
+   - Ensures all involved nodes agree to commit a transaction before any changes are made permanent.
+
+- **Consensus Protocols**
+   - Ensures that a majority of nodes agree on the state of the system before any changes are committed.
+
+- **Eventual Consistency**
+   - In systems where immediate consistency is not feasible, eventual consistency guarantees that all nodes will eventually reach a consistent state.
+
+### Consistency vs. Other ACID Properties
+
+- **Atomicity** ensures all operations within a transaction are completed; otherwise, the transaction is aborted.
+- **Isolation** ensures transactions do not interfere with each other.
+- **Durability** ensures once a transaction is committed, it remains so, even in the event of a system failure.
+
+Consistency, specifically, guarantees the integrity of the data within these boundaries, ensuring that each transaction brings the database from one valid state to another, maintaining the correctness and integrity of the data throughout the process.
