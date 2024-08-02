@@ -1,0 +1,150 @@
+The provided Java code defines a `ConnectionFactory` class, which is a singleton responsible for managing database connections. This class reads database connection properties from a configuration file and provides a method to obtain a `Connection` object. Let's break down the code step-by-step to understand its components and functionality in detail.
+
+### Class and Singleton Pattern
+
+```java
+package utils;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
+
+import com.mysql.cj.jdbc.Driver;
+
+public class ConnectionFactory {
+```
+
+- **Package Declaration:** The class is part of the `utils` package.
+- **Imports:** Necessary imports for file reading, SQL connections, exception handling, and properties management.
+- **Class Declaration:** Declares the `ConnectionFactory` class, which will handle database connections.
+- **Singleton Pattern:** Ensures only one instance of `ConnectionFactory` exists. This is achieved by using a private static final instance and a private constructor.
+
+### Singleton Instance
+
+```java
+private static final ConnectionFactory connectionFactory = new ConnectionFactory();
+```
+
+- **Static Final Instance:** A single instance of `ConnectionFactory` is created and stored in a static final field. This ensures that there is only one instance of the class (singleton pattern).
+
+### Properties for Database Configuration
+
+```java
+private Properties props = new Properties();
+```
+
+- **Properties Object:** A `Properties` object is used to hold database configuration properties such as the URL, username, and password.
+
+### Private Constructor
+
+```java
+private ConnectionFactory() {
+    try {
+        props.load(new FileReader("src/main/resources/db.properties"));
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+```
+
+- **Private Constructor:** The constructor is private to prevent instantiation from outside the class.
+- **Load Properties:** The constructor loads the database properties from a file located at `src/main/resources/db.properties`.
+- **Exception Handling:** If an `IOException` occurs while reading the properties file, the exception is caught and printed to the stack trace.
+
+### Public Method to Get the Singleton Instance
+
+```java
+public static ConnectionFactory getConnectionFactory() {
+    return connectionFactory;
+}
+```
+
+- **getConnectionFactory Method:** This static method returns the singleton instance of `ConnectionFactory`.
+
+### Method to Get a Database Connection
+
+```java
+public Connection getConnection() {
+    try {
+        return DriverManager.getConnection(
+            props.getProperty("url"),
+            props.getProperty("username"),
+            props.getProperty("password")
+        );
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+```
+
+- **getConnection Method:** This method uses the `DriverManager.getConnection` method to establish a database connection.
+  - **URL:** The database URL is retrieved from the properties object.
+  - **Username:** The database username is retrieved from the properties object.
+  - **Password:** The database password is retrieved from the properties object.
+- **Exception Handling:** If an `SQLException` occurs while establishing the connection, the exception is caught and printed to the stack trace.
+- **Return Connection:** If the connection is successfully established, it is returned. Otherwise, the method returns `null`.
+
+### Code Explanation in Detail
+
+1. **Singleton Pattern:**
+   - Ensures that there is only one instance of `ConnectionFactory` throughout the application. This is useful for managing a limited resource like database connections efficiently.
+   
+2. **Loading Properties:**
+   - The database connection details are externalized in a properties file (`db.properties`). This makes the configuration easy to manage and modify without changing the source code.
+   
+3. **Creating Connection:**
+   - The `getConnection` method uses the `DriverManager` class to create a connection to the database using the properties loaded from the file.
+   
+4. **Exception Handling:**
+   - The code includes basic exception handling by printing stack traces. In a production environment, more robust error handling and logging mechanisms should be used.
+
+### Example of `db.properties` File
+
+The `db.properties` file should contain the database connection details in key-value pairs. Here's an example:
+
+```properties
+url=jdbc:mysql://localhost:3306/mydatabase
+username=myuser
+password=mypassword
+```
+
+### Usage Example
+
+Here’s how you can use the `ConnectionFactory` class in your application:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        ConnectionFactory factory = ConnectionFactory.getConnectionFactory();
+        Connection connection = factory.getConnection();
+        
+        if (connection != null) {
+            System.out.println("Database connected!");
+            // Perform database operations
+            
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Failed to connect to database.");
+        }
+    }
+}
+```
+
+In this example, we get the `ConnectionFactory` instance, obtain a `Connection`, and check if the connection is successful. If successful, we can perform database operations and then close the connection.
+
+### Summary
+
+- **Singleton Pattern:** Ensures a single instance of `ConnectionFactory`.
+- **Properties Management:** Externalizes database configuration.
+- **Connection Handling:** Provides a method to obtain database connections.
+- **Exception Handling:** Catches and prints exceptions, but could be enhanced for production use.
+
+This design promotes clean code practices, configuration management, and efficient resource handling in database operations.
