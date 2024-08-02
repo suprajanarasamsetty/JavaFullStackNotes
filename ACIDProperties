@@ -73,3 +73,236 @@ In distributed systems, consistency can be more complex due to the nature of dis
 - **Durability** ensures once a transaction is committed, it remains so, even in the event of a system failure.
 
 Consistency, specifically, guarantees the integrity of the data within these boundaries, ensuring that each transaction brings the database from one valid state to another, maintaining the correctness and integrity of the data throughout the process.
+
+_______________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+COMMIT ROLLBACK SAVEPOINT 
+
+
+
+Certainly! Understanding commit, rollback, and savepoint in the context of transactions is crucial for maintaining data integrity and handling errors effectively in a database system. Let's go through each concept with detailed explanations and real-time examples.
+
+### Commit
+A commit is an operation that permanently saves all changes made during the current transaction. Once a transaction is committed, all modifications become a permanent part of the database and cannot be undone by a rollback.
+
+**Example:**
+Consider an e-commerce application where a customer places an order. The following steps might occur in a transaction:
+
+1. **Start Transaction**
+2. **Insert Order Details**: Insert a new record in the orders table.
+3. **Update Inventory**: Decrease the stock count of the ordered items.
+4. **Generate Invoice**: Insert a new record in the invoices table.
+5. **Commit Transaction**
+
+If all steps execute successfully, the `COMMIT` operation is issued, permanently saving the changes.
+
+```sql
+BEGIN TRANSACTION;
+
+INSERT INTO orders (customer_id, order_date, total_amount) VALUES (1, '2024-08-02', 100);
+UPDATE inventory SET stock = stock - 1 WHERE product_id = 101;
+INSERT INTO invoices (order_id, invoice_date, amount) VALUES (1, '2024-08-02', 100);
+
+COMMIT;
+```
+
+### Rollback
+A rollback operation undoes all changes made during the current transaction, reverting the database to its previous consistent state before the transaction began. Rollbacks are typically used to handle errors or exceptions.
+
+**Example:**
+Consider the same e-commerce application, but this time an error occurs during the transaction:
+
+1. **Start Transaction**
+2. **Insert Order Details**: Insert a new record in the orders table.
+3. **Update Inventory**: Error occurs (e.g., stock count insufficient).
+
+In this case, a `ROLLBACK` operation is issued, undoing all changes made during the transaction.
+
+```sql
+BEGIN TRANSACTION;
+
+INSERT INTO orders (customer_id, order_date, total_amount) VALUES (1, '2024-08-02', 100);
+UPDATE inventory SET stock = stock - 1 WHERE product_id = 101;
+
+-- Error occurs: stock count insufficient
+ROLLBACK;
+```
+
+### Savepoint
+A savepoint allows you to set a temporary point within a transaction to which you can later roll back without affecting the entire transaction. This is useful for handling partial errors within complex transactions.
+
+**Example:**
+Consider a banking application where a customer transfers money between two accounts:
+
+1. **Start Transaction**
+2. **Check Balance**: Ensure the source account has sufficient funds.
+3. **Savepoint**: Create a savepoint before transferring money.
+4. **Debit Source Account**: Deduct amount from the source account.
+5. **Credit Destination Account**: Error occurs (e.g., destination account invalid).
+6. **Rollback to Savepoint**: Revert to the savepoint, keeping the balance check intact.
+7. **Handle Error**: Take corrective action or abort the transaction.
+
+```sql
+BEGIN TRANSACTION;
+
+-- Step 1: Check balance
+SELECT balance FROM accounts WHERE account_id = 1;
+
+-- Step 2: Set savepoint
+SAVEPOINT before_transfer;
+
+-- Step 3: Debit source account
+UPDATE accounts SET balance = balance - 100 WHERE account_id = 1;
+
+-- Step 4: Credit destination account (error occurs)
+UPDATE accounts SET balance = balance + 100 WHERE account_id = 2;
+
+-- Error handling: Rollback to savepoint
+ROLLBACK TO SAVEPOINT before_transfer;
+
+-- Further actions or rollback the entire transaction
+ROLLBACK;  -- or COMMIT if resolved
+```
+
+### Real-Time Example Scenario
+Imagine a flight booking system where multiple operations must succeed for a booking to be confirmed:
+
+1. **Start Transaction**
+2. **Check Seat Availability**
+3. **Savepoint**: Create a savepoint after checking availability.
+4. **Book Seat**: Reserve the seat for the passenger.
+5. **Update Frequent Flyer Points**: Error occurs while updating points.
+6. **Rollback to Savepoint**: Revert to the savepoint, keeping the seat availability check intact.
+7. **Handle Error**: Retry updating points or abort the transaction.
+
+```sql
+BEGIN TRANSACTION;
+
+-- Check seat availability
+SELECT seat_count FROM flights WHERE flight_id = 123;
+
+-- Savepoint after availability check
+SAVEPOINT after_availability_check;
+
+-- Book seat
+UPDATE flights SET seat_count = seat_count - 1 WHERE flight_id = 123;
+
+-- Update frequent flyer points (error occurs)
+UPDATE frequent_flyer SET points = points + 100 WHERE passenger_id = 456;
+
+-- Error handling: Rollback to savepoint
+ROLLBACK TO SAVEPOINT after_availability_check;
+
+-- Further actions or rollback the entire transaction
+ROLLBACK;  -- or COMMIT if resolved
+```
+
+### Summary
+- **Commit** permanently saves all changes made in the transaction.
+- **Rollback** undoes all changes made during the transaction, reverting the database to its previous state.
+- **Savepoint** sets a temporary point within a transaction to which you can later rollback, providing finer control over error handling and transaction management.
+
+Understanding and using these operations effectively helps ensure data integrity and robust error handling in database applications.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sure, let's break down simple examples for commit, rollback, and savepoint with clear explanations:
+
+### Commit Example
+Imagine you are managing a simple bank database where you need to transfer $100 from Account A to Account B.
+
+1. **Start Transaction**
+2. **Debit Account A**: Subtract $100 from Account A's balance.
+3. **Credit Account B**: Add $100 to Account B's balance.
+4. **Commit Transaction**: Permanently save the changes.
+
+**SQL Code:**
+
+```sql
+BEGIN TRANSACTION;
+
+UPDATE accounts SET balance = balance - 100 WHERE account_id = 'A';
+UPDATE accounts SET balance = balance + 100 WHERE account_id = 'B';
+
+COMMIT;
+```
+
+**Explanation:**
+- The transaction starts with `BEGIN TRANSACTION`.
+- The first `UPDATE` deducts $100 from Account A.
+- The second `UPDATE` adds $100 to Account B.
+- The `COMMIT` saves these changes permanently in the database.
+
+### Rollback Example
+Now, let's say an error occurs while crediting Account B. We want to revert all changes made during the transaction to avoid any inconsistencies.
+
+1. **Start Transaction**
+2. **Debit Account A**: Subtract $100 from Account A's balance.
+3. **Credit Account B**: Error occurs (e.g., Account B does not exist).
+4. **Rollback Transaction**: Revert all changes.
+
+**SQL Code:**
+
+```sql
+BEGIN TRANSACTION;
+
+UPDATE accounts SET balance = balance - 100 WHERE account_id = 'A';
+UPDATE accounts SET balance = balance + 100 WHERE account_id = 'B';
+
+-- Error occurs, rollback the transaction
+ROLLBACK;
+```
+
+**Explanation:**
+- The transaction starts with `BEGIN TRANSACTION`.
+- The first `UPDATE` deducts $100 from Account A.
+- An error occurs during the second `UPDATE`.
+- The `ROLLBACK` undoes all changes, leaving both accounts as they were before the transaction began.
+
+### Savepoint Example
+Suppose we want to update multiple related records, and we want to be able to rollback to a specific point if something goes wrong. Here, we set a savepoint after the first update.
+
+1. **Start Transaction**
+2. **Update Record 1**: Update a value in the first record.
+3. **Savepoint**: Create a savepoint.
+4. **Update Record 2**: Update a value in the second record.
+5. **Error Handling**: If an error occurs, rollback to the savepoint.
+
+**SQL Code:**
+
+```sql
+BEGIN TRANSACTION;
+
+UPDATE employees SET salary = salary + 1000 WHERE employee_id = 1;
+
+SAVEPOINT before_update_2;
+
+UPDATE employees SET salary = salary + 1000 WHERE employee_id = 2;
+
+-- Error occurs, rollback to savepoint
+ROLLBACK TO SAVEPOINT before_update_2;
+
+-- Commit or rollback the entire transaction based on further logic
+COMMIT;  -- if no further errors
+```
+
+**Explanation:**
+- The transaction starts with `BEGIN TRANSACTION`.
+- The first `UPDATE` increases Employee 1's salary by $1000.
+- A savepoint named `before_update_2` is created.
+- The second `UPDATE` attempts to increase Employee 2's salary by $1000.
+- If an error occurs, `ROLLBACK TO SAVEPOINT before_update_2` reverts changes made after the savepoint, but keeps the first update intact.
+- Finally, the transaction is either committed or rolled back entirely based on further logic.
