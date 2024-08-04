@@ -1,0 +1,222 @@
+Isolation levels define how transactions interact with each other and the database, particularly in terms of visibility of data changes. Each level offers different trade-offs between consistency and performance. Here’s a more detailed overview:
+
+1. **Read Uncommitted**:
+   - **Behavior**: Transactions can read data that has been modified by other transactions but not yet committed.
+   - **Risk**: Leads to dirty reads (reading uncommitted changes from other transactions).
+   - **Usage**:
+     ```sql
+     SET SESSION transaction_isolation = 'READ-UNCOMMITTED';
+     ```
+
+2. **Read Committed**:
+   - **Behavior**: Transactions can only read data that has been committed by other transactions.
+   - **Risk**: Prevents dirty reads but allows non-repeatable reads (data can change if another transaction modifies and commits it after the initial read).
+   - **Usage**:
+     ```sql
+     SET SESSION transaction_isolation = 'READ COMMITTED';
+     ```
+
+3. **Repeatable Read**:
+   - **Behavior**: A transaction sees a consistent snapshot of the data as it existed at the start of the transaction. Data modifications by other transactions after the snapshot are not visible.
+   - **Risk**: Prevents dirty reads and non-repeatable reads but allows phantom reads (new rows added by other transactions may be visible if the same query is executed again).
+   - **Default**: This is the default isolation level for InnoDB in MySQL.
+   - **Usage**:
+     ```sql
+     SET SESSION transaction_isolation = 'REPEATABLE READ';
+     ```
+
+4. **Serializable**:
+   - **Behavior**: The strictest isolation level. Transactions are executed in a way that they appear to be serially ordered, one after another.
+   - **Risk**: Prevents dirty reads, non-repeatable reads, and phantom reads, but can significantly impact performance due to increased locking.
+   - **Usage**:
+     ```sql
+     SET SESSION transaction_isolation = 'SERIALIZABLE';
+     ```
+
+### Setting Isolation Levels
+
+To set the isolation level for a session or globally, you can use the following SQL commands:
+
+- **Session Level**:
+  ```sql
+  SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+  ```
+
+- **Global Level**:
+  ```sql
+  SET GLOBAL TRANSACTION ISOLATION LEVEL READ COMMITTED;
+  ```
+
+### Checking Current Isolation Level
+
+To check the current transaction isolation level for your session:
+
+```sql
+SELECT @SESSION.transaction_isolation;
+```
+
+Understanding and choosing the appropriate isolation level is crucial for balancing performance and data consistency based on the specific requirements of your application.
+
+
+_______________________________________________________________________________________________________________________________________________________________________________________________
+
+#### `products` Table
+
+| product_id | product_name | stock |
+|------------|--------------|-------|
+| 1          | Widget       | 50    |
+| 2          | Gadget       | 30    |
+
+#### `accounts` Table
+
+| account_id | account_name | balance |
+|------------|--------------|---------|
+| 1          | Alice        | 1000    |
+| 2          | Bob          | 1500    |
+
+#### `orders` Table
+
+| order_id | product_id | quantity |
+|----------|------------|----------|
+| 100      | 1          | 5        |
+| 101      | 2          | 2        |
+
+### SQL Commands to Create and Populate Tables
+
+```sql
+-- Create products table
+CREATE TABLE products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(50),
+    stock INT
+);
+
+-- Insert sample data into products table
+INSERT INTO products (product_id, product_name, stock) VALUES
+(1, 'Widget', 50),
+(2, 'Gadget', 30);
+
+-- Create accounts table
+CREATE TABLE accounts (
+    account_id INT PRIMARY KEY,
+    account_name VARCHAR(50),
+    balance DECIMAL(10, 2)
+);
+
+-- Insert sample data into accounts table
+INSERT INTO accounts (account_id, account_name, balance) VALUES
+(1, 'Alice', 1000.00),
+(2, 'Bob', 1500.00);
+
+-- Create orders table
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    product_id INT,
+    quantity INT,
+    FOREIGN KEY (product_id) REFERENCES products (product_id)
+);
+
+-- Insert sample data into orders table
+INSERT INTO orders (order_id, product_id, quantity) VALUES
+(100, 1, 5),
+(101, 2, 2);
+```
+
+### Example Scenarios for Each Isolation Level
+
+#### 1. **Read Uncommitted**
+
+**Scenario**: T1 updates the stock but doesn't commit, T2 reads the stock.
+
+```sql
+-- T1
+START TRANSACTION;
+UPDATE products SET stock = 45 WHERE product_id = 1;
+-- T1 has not committed yet
+
+-- T2
+SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+SELECT stock FROM products WHERE product_id = 1; -- T2 sees stock as 45 (dirty read)
+```
+
+#### 2. **Read Committed**
+
+**Scenario**: T1 updates the balance and commits, T2 reads the balance before and after the commit.
+
+```sql
+-- T1
+START TRANSACTION;
+UPDATE accounts SET balance = 900 WHERE account_id = 1;
+COMMIT;
+
+-- T2
+SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+SELECT balance FROM accounts WHERE account_id = 1; -- Initially, T2 sees $1000
+-- After T1 commits, T2 sees $900
+SELECT balance FROM accounts WHERE account_id = 1;
+```
+
+#### 3. **Repeatable Read**
+process1:
+**Scenario**: T1 reads all orders, T2 inserts a new order and commits.
+
+```sql
+-- T1
+START TRANSACTION;
+SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+SELECT * FROM orders; -- T1 sees initial list of orders
+
+-- T2
+START TRANSACTION;
+INSERT INTO orders (order_id, product_id, quantity) VALUES (102, 1, 10);
+COMMIT;
+
+-- T1 (still in progress)
+SELECT * FROM orders; -- T1 sees the same initial list of orders (no phantom read)
+```
+
+process 2:
+
+-- T1
+START TRANSACTION;
+SELECT * FROM orders WHERE product_id = 1;
+-- T1 sees:
+-- | order_id | product_id | quantity |
+-- |----------|------------|----------|
+-- | 100      | 1          | 5        |
+
+-- T2
+START TRANSACTION;
+INSERT INTO orders (order_id, product_id, quantity) VALUES (102, 1, 10);
+COMMIT;
+
+-- T1 (still in progress)
+SELECT * FROM orders WHERE product_id = 1;
+-- If T1 sees:
+-- | order_id | product_id | quantity |
+-- |----------|------------|----------|
+-- | 100      | 1          | 5        |
+-- | 102      | 1          | 10       |
+-- This would be a phantom read because T1 sees the new row inserted by T2.
+
+
+#### 4. **Serializable**
+
+**Scenario**: T1 reads the stock, T2 tries to update the stock.
+
+```sql
+-- T1
+START TRANSACTION;
+SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+SELECT stock FROM products WHERE product_id = 1; -- T1 sees stock as 50
+
+-- T2
+START TRANSACTION;
+UPDATE products SET stock = 45 WHERE product_id = 1; -- T2 is blocked until T1 completes
+
+-- T1
+COMMIT;
+-- Now T2 can proceed
+```
+
+These examples demonstrate how different isolation levels affect the visibility and consistency of data in concurrent transactions.
