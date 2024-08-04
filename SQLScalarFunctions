@@ -1,0 +1,197 @@
+Scalar functions in SQL are functions that take one parameter and return a single value. These functions are often used to perform operations on individual data items and are very useful for data manipulation and transformation.
+
+### 1. UCASE (or UPPER)
+
+**Definition**: Converts a string to uppercase.
+
+**Syntax**: 
+```sql
+UCASE(string) or UPPER(string)
+```
+
+**Example**:
+Suppose we have a `customers` table:
+
+```sql
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(100)
+);
+
+INSERT INTO customers (customer_id, customer_name) VALUES
+(1, 'John Doe'),
+(2, 'jane smith'),
+(3, 'Alice Johnson');
+```
+
+To convert all customer names to uppercase:
+
+```sql
+SELECT customer_id, UCASE(customer_name) AS uppercase_name
+FROM customers;
+```
+
+**Result**:
+```
+| customer_id | uppercase_name |
+|-------------|----------------|
+| 1           | JOHN DOE       |
+| 2           | JANE SMITH     |
+| 3           | ALICE JOHNSON  |
+```
+
+### 2. LCASE (or LOWER)
+
+**Definition**: Converts a string to lowercase.
+
+**Syntax**: 
+```sql
+LCASE(string) or LOWER(string)
+```
+
+**Example**:
+Using the same `customers` table, to convert all customer names to lowercase:
+
+```sql
+SELECT customer_id, LCASE(customer_name) AS lowercase_name
+FROM customers;
+```
+
+**Result**:
+```
+| customer_id | lowercase_name |
+|-------------|----------------|
+| 1           | john doe       |
+| 2           | jane smith     |
+| 3           | alice johnson  |
+```
+
+### 3. LENGTH
+
+**Definition**: Returns the length of a string.
+
+**Syntax**: 
+```sql
+LENGTH(string)
+```
+
+**Example**:
+To find the length of each customer's name:
+
+```sql
+SELECT customer_id, customer_name, LENGTH(customer_name) AS name_length
+FROM customers;
+```
+
+**Result**:
+```
+| customer_id | customer_name | name_length |
+|-------------|---------------|-------------|
+| 1           | John Doe      | 8           |
+| 2           | jane smith    | 10          |
+| 3           | Alice Johnson | 13          |
+```
+
+### 4. ROUND
+
+**Definition**: Rounds a number to a specified number of decimal places.
+
+**Syntax**: 
+```sql
+ROUND(number, decimal_places)
+```
+
+**Example**:
+Suppose we have a `products` table with prices:
+
+```sql
+CREATE TABLE products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(100),
+    price DECIMAL(10, 4)
+);
+
+INSERT INTO products (product_id, product_name, price) VALUES
+(1, 'Laptop', 1234.5678),
+(2, 'Smartphone', 567.8912),
+(3, 'Tablet', 234.4567);
+```
+
+To round the prices to 2 decimal places:
+
+```sql
+SELECT product_id, product_name, ROUND(price, 2) AS rounded_price
+FROM products;
+```
+
+**Result**:
+```
+| product_id | product_name | rounded_price |
+|------------|--------------|---------------|
+| 1          | Laptop       | 1234.57       |
+| 2          | Smartphone   | 567.89        |
+| 3          | Tablet       | 234.46        |
+```
+
+### 5. FLOOR
+
+**Definition**: Returns the largest integer less than or equal to a number.
+
+**Syntax**: 
+```sql
+FLOOR(number)
+```
+
+**Example**:
+Using the same `products` table, to get the floor value of each price:
+
+```sql
+SELECT product_id, product_name, FLOOR(price) AS floor_price
+FROM products;
+```
+
+**Result**:
+```
+| product_id | product_name | floor_price |
+|------------|--------------|-------------|
+| 1          | Laptop       | 1234        |
+| 2          | Smartphone   | 567         |
+| 3          | Tablet       | 234         |
+```
+
+### 6. CEIL (or CEILING)
+
+**Definition**: Returns the smallest integer greater than or equal to a number.
+
+**Syntax**: 
+```sql
+CEIL(number) or CEILING(number)
+```
+
+**Example**:
+Using the same `products` table, to get the ceiling value of each price:
+
+```sql
+SELECT product_id, product_name, CEIL(price) AS ceil_price
+FROM products;
+```
+
+**Result**:
+```
+| product_id | product_name | ceil_price |
+|------------|--------------|------------|
+| 1          | Laptop       | 1235       |
+| 2          | Smartphone   | 568        |
+| 3          | Tablet       | 235        |
+```
+
+### Summary
+
+- **UCASE/UPPER**: Converts a string to uppercase.
+- **LCASE/LOWER**: Converts a string to lowercase.
+- **LENGTH**: Returns the length of a string.
+- **ROUND**: Rounds a number to a specified number of decimal places.
+- **FLOOR**: Returns the largest integer less than or equal to a number.
+- **CEIL/CEILING**: Returns the smallest integer greater than or equal to a number.
+
+These scalar functions are powerful tools for data manipulation, enabling you to transform and process individual data items in various ways.
