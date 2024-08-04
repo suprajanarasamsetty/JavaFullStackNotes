@@ -1,0 +1,203 @@
+### Triggers in SQL
+
+A trigger is a predefined action in a database that is automatically executed (or "triggered") when a specified event occurs. This event could be an `INSERT`, `UPDATE`, or `DELETE` operation on a table. Triggers help maintain data consistency and enforce business rules.
+
+### Key Concepts
+
+1. **Event**: The action that causes the trigger to execute (INSERT, UPDATE, DELETE).
+2. **Timing**: Specifies whether the trigger should fire before or after the event (`BEFORE` or `AFTER`).
+3. **Action**: The SQL statements that are executed when the trigger is fired.
+
+### Syntax
+
+```sql
+CREATE TRIGGER trigger_name
+[BEFORE | AFTER] [INSERT | DELETE | UPDATE]
+ON table_name
+FOR EACH ROW
+BEGIN
+    -- SQL statements
+END;
+```
+
+### Example: Maintaining a Log of Changes
+
+Let's create a trigger to log changes to an `employees` table whenever a new employee is added. We'll maintain a `employee_log` table to store the log entries.
+
+### Step-by-Step Example
+
+#### Step 1: Create the `employees` and `employee_log` Tables
+
+```sql
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    salary DECIMAL(10, 2),
+    department VARCHAR(50),
+    hire_date DATE
+);
+
+CREATE TABLE employee_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT,
+    action VARCHAR(50),
+    action_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### Step 2: Create the Trigger
+
+We will create an `AFTER INSERT` trigger on the `employees` table. This trigger will insert a log entry into the `employee_log` table whenever a new employee is added.
+
+```sql
+CREATE TRIGGER after_employee_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO employee_log (employee_id, action) 
+    VALUES (NEW.id, 'INSERT');
+END;
+```
+
+### Explanation
+
+- **Trigger Name**: `after_employee_insert`
+- **Timing**: `AFTER` the insert operation.
+- **Event**: `INSERT` on the `employees` table.
+- **Action**: Insert a new log entry into the `employee_log` table with the new employee's ID and the action type ('INSERT').
+
+#### Step 3: Insert Data into `employees` Table
+
+When we insert a new employee, the trigger will automatically insert a corresponding log entry.
+
+```sql
+INSERT INTO employees (name, salary, department, hire_date) 
+VALUES ('Alice Williams', 70000.00, 'Engineering', '2023-04-05');
+```
+
+#### Step 4: Verify the Log
+
+Check the `employee_log` table to see if the trigger has created a log entry.
+
+```sql
+SELECT * FROM employee_log;
+```
+
+### Expected Result
+
+```
+| log_id | employee_id | action | action_date          |
+|--------|-------------|--------|----------------------|
+| 1      | 1           | INSERT | 2023-04-05 12:34:56  |
+```
+
+### Example of an `UPDATE` Trigger
+
+Now, let's create a trigger that logs updates to an employee's salary.
+
+#### Create the Trigger
+
+```sql
+CREATE TRIGGER after_employee_update
+AFTER UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    IF OLD.salary <> NEW.salary THEN
+        INSERT INTO employee_log (employee_id, action) 
+        VALUES (NEW.id, 'UPDATE SALARY');
+    END IF;
+END;
+```
+
+### Explanation
+
+- **Trigger Name**: `after_employee_update`
+- **Timing**: `AFTER` the update operation.
+- **Event**: `UPDATE` on the `employees` table.
+- **Action**: If the `salary` changes, insert a log entry into the `employee_log` table with the employee's ID and the action type ('UPDATE SALARY').
+
+#### Update Employee Salary
+
+When we update an employee's salary, the trigger will automatically insert a corresponding log entry if the salary changes.
+
+```sql
+UPDATE employees 
+SET salary = 75000.00 
+WHERE id = 1;
+```
+
+#### Verify the Log
+
+Check the `employee_log` table to see if the trigger has created a log entry for the salary update.
+
+```sql
+SELECT * FROM employee_log;
+```
+
+### Expected Result
+
+```
+| log_id | employee_id | action       | action_date          |
+|--------|-------------|--------------|----------------------|
+| 1      | 1           | INSERT       | 2023-04-05 12:34:56  |
+| 2      | 1           | UPDATE SALARY| 2023-04-06 14:22:11  |
+```
+
+### Example of a `DELETE` Trigger
+
+Finally, let's create a trigger to log deletions of employees.
+
+#### Create the Trigger
+
+```sql
+CREATE TRIGGER after_employee_delete
+AFTER DELETE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO employee_log (employee_id, action) 
+    VALUES (OLD.id, 'DELETE');
+END;
+```
+
+### Explanation
+
+- **Trigger Name**: `after_employee_delete`
+- **Timing**: `AFTER` the delete operation.
+- **Event**: `DELETE` on the `employees` table.
+- **Action**: Insert a log entry into the `employee_log` table with the deleted employee's ID and the action type ('DELETE').
+
+#### Delete an Employee
+
+When we delete an employee, the trigger will automatically insert a corresponding log entry.
+
+```sql
+DELETE FROM employees 
+WHERE id = 1;
+```
+
+#### Verify the Log
+
+Check the `employee_log` table to see if the trigger has created a log entry for the deletion.
+
+```sql
+SELECT * FROM employee_log;
+```
+
+### Expected Result
+
+```
+| log_id | employee_id | action       | action_date          |
+|--------|-------------|--------------|----------------------|
+| 1      | 1           | INSERT       | 2023-04-05 12:34:56  |
+| 2      | 1           | UPDATE SALARY| 2023-04-06 14:22:11  |
+| 3      | 1           | DELETE       | 2023-04-07 16:18:33  |
+```
+
+### Summary
+
+- **Triggers**: Automatically execute predefined actions when specific events (INSERT, UPDATE, DELETE) occur.
+- **Timing**: Specify whether the trigger fires `BEFORE` or `AFTER` the event.
+- **Actions**: Perform SQL statements, such as logging changes, validating data, or enforcing business rules.
+- **Use Cases**: Maintain data consistency, audit changes, enforce complex constraints, and automate tasks.
+
+Triggers help ensure that certain actions are performed automatically in response to data modifications, reducing the need for manual intervention and ensuring data integrity.
