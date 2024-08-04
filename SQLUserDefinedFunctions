@@ -1,0 +1,207 @@
+### User-Defined Functions (UDFs) in SQL
+
+User-Defined Functions (UDFs) are custom functions created to encapsulate complex operations. They can accept multiple inputs and return either a table (table-valued function) or a single value (scalar function). UDFs allow for complex calculations and transformations within SQL queries.
+
+### Key Features
+
+- **Custom Logic**: Encapsulate complex operations into reusable functions.
+- **Inputs and Outputs**: Accept multiple input parameters and return results.
+- **Integration**: Can be used within `SELECT` statements, invoked from procedures, and integrated into other SQL operations.
+
+### Types of UDFs
+
+1. **Scalar Functions**: Return a single value.
+2. **Table-Valued Functions**: Return a table.
+
+### Syntax and Components
+
+1. **Delimiter**: Change the delimiter to define the function.
+2. **Create Function**: Define the function with parameters.
+3. **SQL Statements**: Write the SQL logic inside the function.
+4. **End**: End the function definition and reset the delimiter.
+5. **Select Function**: Invoke the function with the required arguments.
+6. **Drop Function**: Remove the function if it exists.
+
+### Scalar Function Example
+
+Let's create a scalar function that calculates the discount price of a product.
+
+#### Step 1: Change the Delimiter
+
+```sql
+DELIMITER //
+```
+
+#### Step 2: Create the Function
+
+```sql
+CREATE FUNCTION calculate_discount_price (
+    original_price DECIMAL(10, 2),
+    discount_percentage DECIMAL(5, 2)
+) RETURNS DECIMAL(10, 2)
+BEGIN
+    RETURN original_price - (original_price * discount_percentage / 100);
+END//
+```
+
+#### Step 3: Reset the Delimiter
+
+```sql
+DELIMITER ;
+```
+
+### Explanation
+
+- **Delimiter**: Change the delimiter to `//` to define the function without prematurely ending it.
+- **Function Definition**:
+  - Parameters: `original_price` and `discount_percentage` are input parameters.
+  - Returns: Specifies the return type of the function.
+- **SQL Logic**: The function calculates the discount price by subtracting the discount from the original price.
+- **End and Reset Delimiter**: End the function definition with `END//` and reset the delimiter to `;`.
+
+### Using the Function
+
+#### Step 4: Call the Function
+
+```sql
+SELECT calculate_discount_price(100, 10) AS discounted_price;
+```
+
+**Result**:
+
+```
+| discounted_price |
+|------------------|
+| 90.00            |
+```
+
+### Dropping the Function
+
+If you need to remove a UDF, use the `DROP FUNCTION` statement.
+
+```sql
+DROP FUNCTION IF EXISTS calculate_discount_price;
+```
+
+### Table-Valued Function Example
+
+Let's create a table-valued function that returns a list of employees with salaries above a certain threshold.
+
+#### Step 1: Change the Delimiter
+
+```sql
+DELIMITER //
+```
+
+#### Step 2: Create the Function
+
+```sql
+CREATE FUNCTION employees_with_high_salary (salary_threshold DECIMAL(10, 2))
+RETURNS TABLE
+RETURN
+    SELECT * FROM employees WHERE salary > salary_threshold;
+END//
+```
+
+#### Step 3: Reset the Delimiter
+
+```sql
+DELIMITER ;
+```
+
+### Explanation
+
+- **Function Definition**: The function takes `salary_threshold` as an input parameter and returns a table.
+- **SQL Logic**: The function returns a result set with employees whose salaries are above the specified threshold.
+- **End and Reset Delimiter**: End the function definition with `END//` and reset the delimiter to `;`.
+
+### Using the Table-Valued Function
+
+#### Step 4: Call the Function
+
+```sql
+SELECT * FROM employees_with_high_salary(50000);
+```
+
+### Real-World Use Cases
+
+1. **Data Transformation**:
+   - Create scalar functions to perform complex calculations like currency conversion, tax computation, or date manipulation.
+
+2. **Data Retrieval**:
+   - Use table-valued functions to encapsulate common queries, such as filtering data based on specific criteria (e.g., high-value customers, recent transactions).
+
+3. **Reusable Logic**:
+   - Encapsulate logic that is used frequently across different queries or stored procedures, promoting code reuse and maintainability.
+
+### Simple Explanation
+
+- **User-Defined Functions**: Small programs you write inside your database to do specific tasks, like calculations or data retrieval.
+- **Scalar Function**: Returns one result, like calculating a discount price.
+- **Table-Valued Function**: Returns a table of results, like finding employees with high salaries.
+- **Integration**: You can use these functions in your SQL queries, making your code cleaner and more efficient.
+
+### Full Example
+
+#### Scalar Function for Calculating Discount Price
+
+**Step 1: Create the Table**
+
+```sql
+CREATE TABLE products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_name VARCHAR(100),
+    price DECIMAL(10, 2)
+);
+```
+
+**Step 2: Insert Data**
+
+```sql
+INSERT INTO products (product_name, price) VALUES ('Laptop', 1000.00);
+INSERT INTO products (product_name, price) VALUES ('Smartphone', 500.00);
+INSERT INTO products (product_name, price) VALUES ('Tablet', 300.00);
+```
+
+**Step 3: Create the Scalar Function**
+
+```sql
+DELIMITER //
+
+CREATE FUNCTION calculate_discount_price (
+    original_price DECIMAL(10, 2),
+    discount_percentage DECIMAL(5, 2)
+) RETURNS DECIMAL(10, 2)
+BEGIN
+    RETURN original_price - (original_price * discount_percentage / 100);
+END//
+
+DELIMITER ;
+```
+
+**Step 4: Use the Function**
+
+```sql
+SELECT product_name, price, calculate_discount_price(price, 10) AS discounted_price
+FROM products;
+```
+
+**Expected Result**:
+
+```
+| product_name | price | discounted_price |
+|--------------|-------|------------------|
+| Laptop       | 1000.00 | 900.00         |
+| Smartphone   | 500.00  | 450.00         |
+| Tablet       | 300.00  | 270.00         |
+```
+
+**Step 5: Drop the Function**
+
+```sql
+DROP FUNCTION IF EXISTS calculate_discount_price;
+```
+
+### Summary
+
+User-Defined Functions (UDFs) in SQL allow you to encapsulate complex logic into reusable functions that can be integrated into your SQL queries. Scalar functions return a single value, while table-valued functions return a table of results. UDFs enhance code reusability, simplify complex operations, and improve query efficiency.
