@@ -1,0 +1,191 @@
+### Hashtable Overview
+
+A **Hashtable** in Java is a legacy class that implements a hash table, which maps keys to values. Any non-null object can be used as a key or as a value. Hashtable is synchronized, making it thread-safe. However, due to this synchronization, it might be slower than `HashMap`.
+
+### Characteristics of Hashtable
+
+1. **No Null Keys or Values**: Does not allow null keys or null values.
+2. **Thread-Safe**: All methods are synchronized, making it safe for use in a multi-threaded environment.
+3. **Legacy Class**: Part of the original version of Java and has been largely replaced by `HashMap`.
+
+### Key Methods in Hashtable
+
+#### 1. `put(K key, V value)`
+
+This method associates the specified value with the specified key in the hashtable. If the hashtable previously contained a mapping for the key, the old value is replaced.
+
+```java
+Hashtable<String, Integer> hashtable = new Hashtable<>();
+hashtable.put("A", 1);
+hashtable.put("B", 2);
+hashtable.put("C", 3);
+// Hashtable is now: {"A"=1, "B"=2, "C"=3}
+```
+
+#### 2. `remove(Object key)`
+
+This method removes the key (and its corresponding value) from the hashtable.
+
+```java
+hashtable.remove("B");
+// Hashtable is now: {"A"=1, "C"=3}
+```
+
+#### 3. `get(Object key)`
+
+This method returns the value to which the specified key is mapped, or `null` if the hashtable contains no mapping for the key.
+
+```java
+Integer value = hashtable.get("A");
+// value is 1
+
+Integer nullValue = hashtable.get("B");
+// nullValue is null
+```
+
+#### 4. `clear()`
+
+This method clears the hashtable so that it contains no keys.
+
+```java
+hashtable.clear();
+// Hashtable is now: {}
+```
+
+#### 5. `size()`
+
+This method returns the number of key-value mappings in the hashtable.
+
+```java
+int size = hashtable.size();
+// size is 0 (after clear)
+```
+
+#### 6. `isEmpty()`
+
+This method returns `true` if the hashtable contains no key-value mappings.
+
+```java
+boolean empty = hashtable.isEmpty();
+// empty is true
+```
+
+#### 7. `containsKey(Object key)`
+
+This method returns `true` if the hashtable contains a mapping for the specified key.
+
+```java
+hashtable.put("A", 1);
+boolean hasA = hashtable.containsKey("A");
+// hasA is true
+
+boolean hasB = hashtable.containsKey("B");
+// hasB is false
+```
+
+#### 8. `containsValue(Object value)`
+
+This method returns `true` if the hashtable maps one or more keys to the specified value.
+
+```java
+boolean has1 = hashtable.containsValue(1);
+// has1 is true
+
+boolean has2 = hashtable.containsValue(2);
+// has2 is false
+```
+
+#### 9. `keySet()`
+
+This method returns a set view of the keys contained in the hashtable.
+
+```java
+Set<String> keys = hashtable.keySet();
+// keys is ["A"]
+```
+
+#### 10. `values()`
+
+This method returns a collection view of the values contained in the hashtable.
+
+```java
+Collection<Integer> values = hashtable.values();
+// values is [1]
+```
+
+#### 11. `entrySet()`
+
+This method returns a set view of the mappings contained in the hashtable.
+
+```java
+Set<Map.Entry<String, Integer>> entries = hashtable.entrySet();
+// entries is [{"A"=1}]
+```
+
+### Example Usage
+
+Here's a complete example demonstrating the usage of various `Hashtable` methods:
+
+```java
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Set;
+import java.util.Collection;
+
+public class HashtableExample {
+    public static void main(String[] args) {
+        // Create a Hashtable
+        Hashtable<String, Integer> hashtable = new Hashtable<>();
+        
+        // Add elements using put()
+        hashtable.put("C", 3);
+        hashtable.put("A", 1);
+        hashtable.put("B", 2);
+        System.out.println("Initial Hashtable: " + hashtable); // Output: {A=1, B=2, C=3}
+        
+        // Remove an element using remove()
+        hashtable.remove("B");
+        System.out.println("After removing 'B': " + hashtable); // Output: {A=1, C=3}
+        
+        // Retrieve an element using get()
+        Integer value = hashtable.get("A");
+        System.out.println("Value for 'A': " + value); // Output: 1
+        
+        // Check the size of the Hashtable
+        int size = hashtable.size();
+        System.out.println("Size of Hashtable: " + size); // Output: 2
+        
+        // Check if the Hashtable is empty
+        boolean isEmpty = hashtable.isEmpty();
+        System.out.println("Is Hashtable empty? " + isEmpty); // Output: false
+        
+        // Check if a key is present using containsKey()
+        boolean containsA = hashtable.containsKey("A");
+        System.out.println("Contains key 'A'? " + containsA); // Output: true
+        
+        // Check if a value is present using containsValue()
+        boolean contains1 = hashtable.containsValue(1);
+        System.out.println("Contains value 1? " + contains1); // Output: true
+        
+        // Get the set of keys
+        Set<String> keys = hashtable.keySet();
+        System.out.println("Keys: " + keys); // Output: [A, C]
+        
+        // Get the collection of values
+        Collection<Integer> values = hashtable.values();
+        System.out.println("Values: " + values); // Output: [1, 3]
+        
+        // Get the set of entries
+        Set<Map.Entry<String, Integer>> entries = hashtable.entrySet();
+        System.out.println("Entries: " + entries); // Output: [A=1, C=3]
+        
+        // Clear the Hashtable
+        hashtable.clear();
+        System.out.println("Hashtable after clear(): " + hashtable); // Output: {}
+    }
+}
+```
+
+### Summary
+
+The `Hashtable` class in Java provides a way to store key-value pairs with unique keys in a thread-safe manner. Key methods include `put` for adding entries, `remove` for deleting entries, `get` for retrieving values, `clear` for removing all entries, `size` and `isEmpty` for checking the size and emptiness of the hashtable, `containsKey` and `containsValue` for checking the presence of keys and values, and `keySet`, `values`, and `entrySet` for getting views of the keys, values, and entries. Hashtable does not allow null keys or values and is synchronized, making it thread-safe.
