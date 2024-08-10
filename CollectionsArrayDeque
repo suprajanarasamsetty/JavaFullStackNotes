@@ -1,0 +1,99 @@
+### ArrayDeque Overview
+
+**ArrayDeque** (short for "Array Double Ended Queue") in Java is a resizable array implementation of the `Deque` interface. It allows for efficient insertion, removal, and access of elements from both ends of the deque. Unlike `Stack`, `ArrayDeque` is not limited to LIFO operations and unlike `Queue`, it is not limited to FIFO operations.
+
+### Characteristics of ArrayDeque
+
+1. **Resizable Array**: Internally uses a resizable array to store elements.
+2. **Double-Ended**: Supports operations at both ends of the deque.
+3. **Not Thread-Safe**: Multiple threads should not access it concurrently without proper synchronization.
+4. **Does Not Allow Null Elements**: Attempting to add null elements will throw a `NullPointerException`.
+
+### Key Methods in ArrayDeque
+
+#### 1. `add(E element)`
+
+This method inserts the specified element at the end of the deque. Throws an `IllegalStateException` if no space is currently available (though this is unlikely as the deque is resizable).
+
+```java
+ArrayDeque<String> deque = new ArrayDeque<>();
+deque.add("A");
+deque.add("B");
+deque.add("C");
+// Deque is now: ["A", "B", "C"]
+```
+
+#### 2. `offer(E element)`
+
+This method inserts the specified element at the end of the deque. It is generally preferable to `add(E)` as it offers better behavior in capacity-restricted deques (but `ArrayDeque` is not capacity-restricted).
+
+```java
+boolean result = deque.offer("D");
+// Deque is now: ["A", "B", "C", "D"]
+// result is true
+```
+
+#### 3. `element()`
+
+This method retrieves, but does not remove, the head of the deque. Throws a `NoSuchElementException` if the deque is empty.
+
+```java
+String head = deque.element();
+// head is "A"
+// Deque remains: ["A", "B", "C", "D"]
+```
+
+#### 4. `poll()`
+
+This method retrieves and removes the head of the deque, or returns `null` if the deque is empty.
+
+```java
+String head = deque.poll();
+// head is "A"
+// Deque is now: ["B", "C", "D"]
+```
+
+### Example Usage
+
+Here's a complete example demonstrating the usage of various `ArrayDeque` methods:
+
+```java
+import java.util.ArrayDeque;
+
+public class ArrayDequeExample {
+    public static void main(String[] args) {
+        // Create an ArrayDeque
+        ArrayDeque<String> deque = new ArrayDeque<>();
+        
+        // Add elements using add()
+        deque.add("A");
+        deque.add("B");
+        deque.add("C");
+        System.out.println("Initial Deque: " + deque); // Output: [A, B, C]
+        
+        // Add an element using offer()
+        boolean result = deque.offer("D");
+        System.out.println("After offer(D): " + deque); // Output: [A, B, C, D]
+        System.out.println("Offer result: " + result);  // Output: true
+        
+        // Retrieve the head element using element()
+        String headElement = deque.element();
+        System.out.println("Head Element: " + headElement); // Output: A
+        System.out.println("Deque after element(): " + deque); // Output: [A, B, C, D]
+        
+        // Remove and retrieve the head element using poll()
+        String polledElement = deque.poll();
+        System.out.println("Polled Element: " + polledElement); // Output: A
+        System.out.println("Deque after poll(): " + deque); // Output: [B, C, D]
+        
+        // Try to poll from an empty deque
+        deque.clear();
+        String emptyPoll = deque.poll();
+        System.out.println("Polled from empty deque: " + emptyPoll); // Output: null
+    }
+}
+```
+
+### Summary
+
+The `ArrayDeque` class in Java provides a flexible and efficient way to manage a collection of elements that need to be accessed from both ends. Key methods include `add` for inserting elements, `offer` as an alternative for insertion that returns a status, `element` for peeking at the head element without removal, and `poll` for retrieving and removing the head element. The class does not allow null elements and is not thread-safe, so concurrent modifications require external synchronization.
