@@ -1,0 +1,154 @@
+### Vector Overview
+
+A **Vector** in Java is a synchronized, resizable array implementation of the `List` interface. It maintains the order of insertion and allows for fast random access to elements. Unlike `ArrayList`, `Vector` is thread-safe, meaning it is synchronized to allow safe access by multiple threads.
+
+### Characteristics of Vector
+
+1. **Order of Insertion**: Vector maintains the order in which elements are added.
+2. **Allows Null Elements**: You can store null values in a Vector.
+3. **Thread-Safe**: All methods in Vector are synchronized, making it safe for use by multiple threads concurrently.
+
+### Key Methods in Vector
+
+Vector supports all methods from `ArrayList` since both implement the `List` interface. Here are some important methods with examples:
+
+#### 1. `add(E e)`
+
+This method appends the specified element to the end of the Vector.
+
+```java
+Vector<String> vector = new Vector<>();
+vector.add("A");
+vector.add("B");
+vector.add("C");
+// Vector is now: ["A", "B", "C"]
+```
+
+#### 2. `add(int index, E element)`
+
+This method inserts the specified element at the specified position in the Vector. Shifts the element currently at that position (if any) and any subsequent elements to the right.
+
+```java
+vector.add(1, "D");
+// Vector is now: ["A", "D", "B", "C"]
+```
+
+#### 3. `get(int index)`
+
+This method returns the element at the specified position in the Vector.
+
+```java
+String element = vector.get(2);
+// element is "B"
+```
+
+#### 4. `remove(int index)`
+
+This method removes the element at the specified position in the Vector. Shifts any subsequent elements to the left.
+
+```java
+vector.remove(2);
+// Vector is now: ["A", "D", "C"]
+```
+
+#### 5. `remove(Object o)`
+
+This method removes the first occurrence of the specified element from the Vector, if it is present.
+
+```java
+vector.remove("D");
+// Vector is now: ["A", "C"]
+```
+
+#### 6. `set(int index, E element)`
+
+This method replaces the element at the specified position in the Vector with the specified element.
+
+```java
+vector.set(1, "E");
+// Vector is now: ["A", "E"]
+```
+
+#### 7. `size()`
+
+This method returns the number of elements in the Vector.
+
+```java
+int size = vector.size();
+// size is 2
+```
+
+#### 8. `isEmpty()`
+
+This method checks if the Vector is empty.
+
+```java
+boolean isEmpty = vector.isEmpty();
+// isEmpty is false
+```
+
+#### 9. `contains(Object o)`
+
+This method checks if the Vector contains the specified element.
+
+```java
+boolean contains = vector.contains("A");
+// contains is true
+```
+
+### Example Usage
+
+Here's a complete example demonstrating the usage of various Vector methods:
+
+```java
+import java.util.Vector;
+
+public class VectorExample {
+    public static void main(String[] args) {
+        // Create a Vector
+        Vector<String> vector = new Vector<>();
+        
+        // Add elements
+        vector.add("A");
+        vector.add("B");
+        vector.add("C");
+        System.out.println("Initial Vector: " + vector); // Output: [A, B, C]
+        
+        // Add an element at a specific position
+        vector.add(1, "D");
+        System.out.println("After add(1, D): " + vector); // Output: [A, D, B, C]
+        
+        // Get an element at a specific position
+        String element = vector.get(2);
+        System.out.println("Element at index 2: " + element); // Output: B
+        
+        // Remove an element at a specific position
+        vector.remove(2);
+        System.out.println("After remove(2): " + vector); // Output: [A, D, C]
+        
+        // Remove a specific element
+        vector.remove("D");
+        System.out.println("After remove(\"D\"): " + vector); // Output: [A, C]
+        
+        // Set an element at a specific position
+        vector.set(1, "E");
+        System.out.println("After set(1, E): " + vector); // Output: [A, E]
+        
+        // Get the size of the Vector
+        int size = vector.size();
+        System.out.println("Size of Vector: " + size); // Output: 2
+        
+        // Check if the Vector is empty
+        boolean isEmpty = vector.isEmpty();
+        System.out.println("Is Vector empty? " + isEmpty); // Output: false
+        
+        // Check if the Vector contains a specific element
+        boolean contains = vector.contains("A");
+        System.out.println("Does Vector contain 'A'? " + contains); // Output: true
+    }
+}
+```
+
+### Summary
+
+The `Vector` class in Java provides a synchronized, resizable array implementation of the `List` interface. It maintains the order of insertion, allows null elements, and supports all methods available in `ArrayList`. Its thread-safe nature makes it suitable for use in concurrent applications, but this comes at the cost of additional synchronization overhead, which can affect performance.
