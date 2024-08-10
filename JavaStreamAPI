@@ -1,0 +1,162 @@
+### Java Stream API
+
+The Stream API in Java provides a modern way to process data declaratively rather than the typical imperative programming technique. It allows you to perform operations on a sequence of elements (such as those in a collection) in a functional style, using methods like `map`, `filter`, and `reduce`.
+
+### Stream vs. Collection
+
+1. **No Storage:**
+   - **Streams:** Do not store data. They process data from collections or other sources.
+   - **Collections:** Store data in memory.
+
+2. **Functional in Nature:**
+   - **Streams:** Support functional programming paradigms with operations like `map`, `filter`, and `reduce`.
+   - **Collections:** Use imperative operations for data manipulation and retrieval.
+
+3. **Lazy Execution:**
+   - **Streams:** Support lazy evaluation, meaning operations are deferred until the terminal operation is invoked.
+   - **Collections:** Execute operations immediately and eagerly.
+
+4. **Possibly Unbounded:**
+   - **Streams:** Can be unbounded, processing data as it becomes available (e.g., infinite streams).
+   - **Collections:** Typically bounded, holding a finite amount of data.
+
+5. **Consumable:**
+   - **Streams:** Are consumable; once processed, they cannot be reused.
+   - **Collections:** Are not consumable; data can be accessed and manipulated multiple times.
+
+### Real-Time Examples
+
+#### Example 1: Using Stream to Filter and Map a List
+
+Let's say we have a list of numbers and we want to filter out the even numbers and then square each remaining number.
+
+**Imperative Approach:**
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+public class ImperativeExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = List.of(1, 2, 3, 4, 5, 6);
+        List<Integer> result = new ArrayList<>();
+
+        for (Integer number : numbers) {
+            if (number % 2 != 0) {
+                result.add(number * number);
+            }
+        }
+
+        System.out.println(result); // Output: [1, 9, 25]
+    }
+}
+```
+
+**Declarative Approach with Streams:**
+
+```java
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class StreamExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = List.of(1, 2, 3, 4, 5, 6);
+
+        List<Integer> result = numbers.stream()
+                                      .filter(number -> number % 2 != 0)
+                                      .map(number -> number * number)
+                                      .collect(Collectors.toList());
+
+        System.out.println(result); // Output: [1, 9, 25]
+    }
+}
+```
+
+In this example:
+- **Imperative Approach:** We use a loop to filter and map the numbers.
+- **Declarative Approach with Streams:** We use `filter` to keep only odd numbers and `map` to square them.
+
+#### Example 2: Lazy Evaluation in Streams
+
+Streams support lazy evaluation, which means that intermediate operations (like `filter` and `map`) are not executed until a terminal operation (like `collect`) is called.
+
+```java
+import java.util.List;
+
+public class LazyEvaluationExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = List.of(1, 2, 3, 4, 5, 6);
+
+        numbers.stream()
+               .filter(number -> {
+                   System.out.println("Filtering: " + number);
+                   return number % 2 != 0;
+               })
+               .map(number -> {
+                   System.out.println("Mapping: " + number);
+                   return number * number;
+               })
+               .collect(Collectors.toList());
+    }
+}
+```
+
+In this example:
+- `filter` and `map` operations are lazily evaluated. You will see "Filtering" and "Mapping" messages only when the terminal operation `collect` is called.
+
+#### Example 3: Unbounded Stream
+
+Streams can process unbounded data sources, like generating an infinite stream of random numbers.
+
+```java
+import java.util.Random;
+import java.util.stream.Stream;
+
+public class InfiniteStreamExample {
+    public static void main(String[] args) {
+        Stream.generate(new Random()::nextInt)
+              .limit(10)
+              .forEach(System.out::println);
+    }
+}
+```
+
+In this example:
+- We generate an infinite stream of random integers using `Stream.generate`.
+- We limit the stream to 10 elements using `limit` and print them using `forEach`.
+
+#### Example 4: Stream Consumption
+
+Streams are consumable. Once you perform an operation on a stream, it cannot be reused.
+
+```java
+import java.util.List;
+import java.util.stream.Stream;
+
+public class StreamConsumptionExample {
+    public static void main(String[] args) {
+        List<String> words = List.of("hello", "world", "java", "stream");
+
+        Stream<String> stream = words.stream();
+
+        // First terminal operation
+        long count = stream.count();
+        System.out.println("Count: " + count); // Output: Count: 4
+
+        // Attempt to reuse the stream
+        try {
+            stream.forEach(System.out::println); // This will throw an IllegalStateException
+        } catch (IllegalStateException e) {
+            System.out.println("Stream cannot be reused.");
+        }
+    }
+}
+```
+
+In this example:
+- We count the elements in the stream using the `count` terminal operation.
+- We then try to reuse the stream, which throws an `IllegalStateException` because streams are consumable.
+
+### Summary
+
+Streams in Java provide a powerful and expressive way to process data. They offer advantages like functional-style operations, lazy evaluation, and the ability to handle unbounded data sources. However, streams are consumable and cannot be reused once a terminal operation has been performed. Collections, on the other hand, store data, are not consumable, and use imperative operations for data manipulation.
