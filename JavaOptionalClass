@@ -1,0 +1,110 @@
+Java's `Optional` class is a container object used to contain not-null objects. It helps prevent null pointer exceptions by providing methods to deal with the presence or absence of a value. Here's a detailed explanation with real-time examples:
+
+### Definition and Syntax
+
+`Optional<T>` is a class where `T` is the type of the value it contains. It might or might not contain a value. This helps in avoiding null references and provides a more expressive way of dealing with optional values.
+
+### Creating Optional Objects
+
+1. **empty()**: Creates an empty `Optional` object.
+2. **of()**: Creates an `Optional` with a non-null value.
+3. **ofNullable()**: Creates an `Optional` that allows for a null or non-null value.
+
+### Methods of Optional
+
+1. **isPresent()**: Returns `true` if there is a value present, otherwise `false`.
+2. **isEmpty()**: Returns `true` if there is no value present, otherwise `false`.
+3. **get()**: Returns the value if present, otherwise throws `NoSuchElementException`.
+4. **ifPresent()**: Performs an action if a value is present.
+5. **orElse()**: Returns the value if present, otherwise returns a default value.
+6. **orElseGet()**: Returns the value if present, otherwise invokes a supplier function and returns the result.
+7. **orElseThrow()**: Returns the value if present, otherwise throws an exception.
+
+### Real-Time Examples
+
+#### Example 1: Creating and Checking Optional Values
+
+```java
+import java.util.Optional;
+
+public class OptionalExample {
+    public static void main(String[] args) {
+        // Creating an empty Optional
+        Optional<String> emptyOptional = Optional.empty();
+        System.out.println("Empty Optional: " + emptyOptional);
+
+        // Creating an Optional with a non-null value
+        Optional<String> nonNullOptional = Optional.of("Hello, World!");
+        System.out.println("Non-null Optional: " + nonNullOptional);
+
+        // Creating an Optional that can be null or non-null
+        Optional<String> nullableOptional = Optional.ofNullable(null);
+        System.out.println("Nullable Optional: " + nullableOptional);
+
+        // Checking if a value is present
+        System.out.println("Is value present in nonNullOptional: " + nonNullOptional.isPresent());
+        System.out.println("Is value present in emptyOptional: " + emptyOptional.isPresent());
+
+        // Checking if a value is absent
+        System.out.println("Is value absent in emptyOptional: " + emptyOptional.isEmpty());
+    }
+}
+```
+
+#### Example 2: Using get() and ifPresent()
+
+```java
+import java.util.Optional;
+
+public class OptionalExample {
+    public static void main(String[] args) {
+        Optional<String> optionalValue = Optional.of("Hello, World!");
+
+        // Using get() to retrieve the value
+        if (optionalValue.isPresent()) {
+            System.out.println("Value: " + optionalValue.get());
+        } else {
+            System.out.println("No value present");
+        }
+
+        // Using ifPresent() to perform an action if a value is present
+        optionalValue.ifPresent(value -> System.out.println("Value using ifPresent: " + value));
+    }
+}
+```
+
+#### Example 3: Using orElse(), orElseGet(), and orElseThrow()
+
+```java
+import java.util.Optional;
+
+public class OptionalExample {
+    public static void main(String[] args) {
+        Optional<String> optionalWithValue = Optional.of("Hello, World!");
+        Optional<String> emptyOptional = Optional.empty();
+
+        // Using orElse() to provide a default value
+        String value1 = optionalWithValue.orElse("Default Value");
+        System.out.println("Value1: " + value1); // Output: Hello, World!
+
+        String value2 = emptyOptional.orElse("Default Value");
+        System.out.println("Value2: " + value2); // Output: Default Value
+
+        // Using orElseGet() to invoke a supplier function
+        String value3 = emptyOptional.orElseGet(() -> "Generated Value");
+        System.out.println("Value3: " + value3); // Output: Generated Value
+
+        // Using orElseThrow() to throw an exception if value is not present
+        try {
+            String value4 = emptyOptional.orElseThrow(() -> new IllegalArgumentException("No value present"));
+            System.out.println("Value4: " + value4);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage()); // Output: No value present
+        }
+    }
+}
+```
+
+### Summary
+
+The `Optional` class in Java is a powerful tool to handle nullable values more gracefully. It provides methods to check the presence of a value, retrieve it, or provide alternative values or actions when the value is absent. This makes your code more robust and less prone to `NullPointerException`.
