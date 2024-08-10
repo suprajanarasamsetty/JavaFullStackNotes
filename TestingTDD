@@ -131,3 +131,308 @@ In this example:
 - Ensure that integrated units work together correctly.
 
 By following TDD, you can ensure that your code is well-tested and that each piece of functionality works as expected, both in isolation and when integrated with other parts of the application.
+
+_____________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+### JUnit: An Overview
+
+JUnit is a popular testing framework for Java. It helps developers write and run repeatable tests. JUnit provides several annotations to configure and control the test lifecycle, as well as a variety of assertions to verify expected results.
+
+### JUnit Annotations
+
+1. **@Test**: Marks a method as a test method.
+2. **@BeforeAll**: Executed once before all test methods in the class. Must be static.
+3. **@AfterAll**: Executed once after all test methods in the class. Must be static.
+4. **@BeforeEach**: Executed before each test method.
+5. **@AfterEach**: Executed after each test method.
+
+### JUnit Assertions
+
+Assertions are used to verify the results of test methods. If an assertion fails, the test fails.
+
+1. **assertEquals**: Checks that two values are equal.
+2. **assertNotEquals**: Checks that two values are not equal.
+3. **assertTrue**: Checks that a condition is true.
+4. **assertFalse**: Checks that a condition is false.
+5. **assertNotNull**: Checks that an object is not null.
+6. **assertThrows**: Checks that a specific exception is thrown.
+
+### Real-Time Examples
+
+#### Example Class to Test
+
+Let's use a simple `Calculator` class for our examples.
+
+```java
+public class Calculator {
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    public int subtract(int a, int b) {
+        return a - b;
+    }
+
+    public int multiply(int a, int b) {
+        return a * b;
+    }
+
+    public int divide(int a, int b) {
+        if (b == 0) {
+            throw new IllegalArgumentException("Division by zero");
+        }
+        return a / b;
+    }
+}
+```
+
+#### JUnit Test Class
+
+```java
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+
+public class CalculatorTest {
+
+    private Calculator calculator;
+
+    @BeforeAll
+    public static void setupAll() {
+        System.out.println("Before all tests.");
+    }
+
+    @AfterAll
+    public static void tearDownAll() {
+        System.out.println("After all tests.");
+    }
+
+    @BeforeEach
+    public void setup() {
+        calculator = new Calculator();
+        System.out.println("Before each test.");
+    }
+
+    @AfterEach
+    public void tearDown() {
+        System.out.println("After each test.");
+    }
+
+    @Test
+    public void testAdd() {
+        assertEquals(5, calculator.add(2, 3));
+    }
+
+    @Test
+    public void testSubtract() {
+        assertEquals(1, calculator.subtract(3, 2));
+    }
+
+    @Test
+    public void testMultiply() {
+        assertEquals(6, calculator.multiply(2, 3));
+    }
+
+    @Test
+    public void testDivide() {
+        assertEquals(2, calculator.divide(6, 3));
+    }
+
+    @Test
+    public void testDivideByZero() {
+        assertThrows(IllegalArgumentException.class, () -> calculator.divide(6, 0));
+    }
+
+    @Test
+    public void testNotEquals() {
+        assertNotEquals(4, calculator.add(2, 2));
+    }
+
+    @Test
+    public void testTrue() {
+        assertTrue(calculator.add(2, 3) == 5);
+    }
+
+    @Test
+    public void testFalse() {
+        assertFalse(calculator.add(2, 2) == 5);
+    }
+
+    @Test
+    public void testNotNull() {
+        assertNotNull(calculator);
+    }
+}
+```
+
+### Explanation
+
+- **Annotations**:
+  - `@BeforeAll`: Runs once before all tests. Typically used for setting up shared resources.
+  - `@AfterAll`: Runs once after all tests. Used for cleanup of shared resources.
+  - `@BeforeEach`: Runs before each test. Used to set up test-specific resources.
+  - `@AfterEach`: Runs after each test. Used for cleanup of test-specific resources.
+  - `@Test`: Marks a method as a test method to be run by the JUnit framework.
+
+- **Assertions**:
+  - `assertEquals(expected, actual)`: Checks if the `expected` value matches the `actual` value.
+  - `assertNotEquals(unexpected, actual)`: Checks if the `actual` value does not match the `unexpected` value.
+  - `assertTrue(condition)`: Checks if the condition is true.
+  - `assertFalse(condition)`: Checks if the condition is false.
+  - `assertNotNull(object)`: Checks if the object is not null.
+  - `assertThrows(exception.class, executable)`: Checks if the executable throws the specified exception.
+
+### Summary
+
+JUnit makes it easy to write and run tests in Java. By using annotations to control the test lifecycle and assertions to verify the results, you can ensure your code behaves as expected. This not only improves the quality of your code but also makes it easier to maintain and refactor.
+
+_______________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+
+### Mockito: An Overview
+
+Mockito is a popular mocking framework for Java that allows you to create mock objects for unit testing. It helps in isolating the behavior of the unit under test by simulating interactions with dependencies. This makes it easier to test components independently.
+
+### Key Features of Mockito
+
+1. **Creating Mocks**: Generate mock objects that can simulate the behavior of real objects.
+2. **Stubbing**: Define how mock objects should respond to method calls.
+3. **Verifying Interactions**: Check if certain methods were called or not called on mocks.
+4. **Spy Objects**: Create partial mocks where some methods are real and others are stubbed.
+5. **Argument Matchers**: Specify conditions for method arguments when stubbing or verifying interactions.
+
+### Basic Annotations
+
+1. **@Mock**: Used to create and inject mock objects.
+2. **@InjectMocks**: Creates an instance of the class under test and injects mocks into it.
+
+### Real-Time Examples
+
+Let's use a simple example to demonstrate the features of Mockito.
+
+#### Example Classes to Test
+
+Imagine we have a `UserService` class that depends on a `UserRepository` to fetch user data.
+
+```java
+public class User {
+    private String name;
+
+    public User(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+public interface UserRepository {
+    User findUserByName(String name);
+}
+
+public class UserService {
+    private UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public String getUserName(String name) {
+        User user = userRepository.findUserByName(name);
+        return user != null ? user.getName() : null;
+    }
+}
+```
+
+#### Mockito Test Class
+
+```java
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+public class UserServiceTest {
+
+    @Mock
+    private UserRepository userRepository;
+
+    @InjectMocks
+    private UserService userService;
+
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testGetUserName() {
+        // Stubbing
+        when(userRepository.findUserByName("Alice")).thenReturn(new User("Alice"));
+
+        // Act
+        String userName = userService.getUserName("Alice");
+
+        // Assert
+        assertEquals("Alice", userName);
+
+        // Verify
+        verify(userRepository).findUserByName("Alice");
+    }
+
+    @Test
+    public void testGetUserName_NotFound() {
+        // Stubbing
+        when(userRepository.findUserByName("Bob")).thenReturn(null);
+
+        // Act
+        String userName = userService.getUserName("Bob");
+
+        // Assert
+        assertNull(userName);
+
+        // Verify
+        verify(userRepository).findUserByName("Bob");
+    }
+}
+```
+
+### Explanation
+
+#### Creating Mocks
+
+- **@Mock**: Used to create and inject mock objects for `UserRepository`.
+- **@InjectMocks**: Used to create an instance of `UserService` and inject the mock `UserRepository` into it.
+
+#### Stubbing
+
+Stubbing in Mockito allows you to define the behavior of mock objects when certain methods are called.
+
+- **when**: Defines the behavior of a mock method call.
+  - `when(userRepository.findUserByName("Alice")).thenReturn(new User("Alice"));` means that when `findUserByName("Alice")` is called on the mock `userRepository`, it should return a new `User` object with the name "Alice".
+  - `when(userRepository.findUserByName("Bob")).thenReturn(null);` means that when `findUserByName("Bob")` is called, it should return `null`.
+
+#### Verifying Interactions
+
+Mockito allows you to verify that certain methods were called on your mocks.
+
+- **verify**: Checks if a method was called on a mock.
+  - `verify(userRepository).findUserByName("Alice");` verifies that `findUserByName("Alice")` was called on `userRepository`.
+
+#### Using Annotations in Tests
+
+- **@BeforeEach**: Initializes mocks before each test.
+  - `MockitoAnnotations.openMocks(this);` initializes the mocks and injects them into the test class.
+
+### Summary
+
+Mockito simplifies unit testing by allowing you to create mock objects, define their behavior, and verify interactions. Using annotations like `@Mock` and `@InjectMocks`, you can set up your tests efficiently. Stubbing allows you to specify how mock objects should respond to method calls, while verification ensures that certain methods were called as expected. This helps isolate the behavior of the unit under test and makes your tests more reliable and maintainable.
