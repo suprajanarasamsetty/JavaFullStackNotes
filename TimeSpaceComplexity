@@ -1,0 +1,39 @@
+### Time Complexity
+
+Time complexity measures the amount of time an algorithm takes to complete as a function of the size of its input. It helps in understanding the scalability of an algorithm and predicting its performance. Common notations used for time complexity include:
+
+- **O(1)**: Constant time - The algorithm takes the same amount of time regardless of the size of the input.
+- **O(log n)**: Logarithmic time - The algorithm's time grows logarithmically as the input size increases.
+- **O(n)**: Linear time - The algorithm's time grows linearly with the input size.
+- **O(n log n)**: Linearithmic time - The algorithm's time grows in proportion to \( n \log n \).
+- **O(n^2)**: Quadratic time - The algorithm's time grows proportionally to the square of the input size.
+- **O(2^n)**: Exponential time - The algorithm's time grows exponentially with the input size.
+- **O(n!)**: Factorial time - The algorithm's time grows factorially with the input size.
+
+### Space Complexity
+
+Space complexity measures the amount of memory an algorithm uses in terms of the size of its input. It includes all the memory used by the algorithm, such as variables, data structures, and function call stacks. Common notations used for space complexity are similar to those for time complexity:
+
+- **O(1)**: Constant space - The algorithm uses a fixed amount of memory regardless of the input size.
+- **O(log n)**: Logarithmic space - The memory usage grows logarithmically with the input size.
+- **O(n)**: Linear space - The memory usage grows linearly with the input size.
+- **O(n log n)**: Linearithmic space - The memory usage grows in proportion to \( n \log n \).
+- **O(n^2)**: Quadratic space - The memory usage grows proportionally to the square of the input size.
+- **O(2^n)**: Exponential space - The memory usage grows exponentially with the input size.
+- **O(n!)**: Factorial space - The memory usage grows factorially with the input size.
+
+### Examples
+
+1. **Linear Search**:
+   - **Time Complexity**: O(n) - In the worst case, the algorithm needs to check each element in the input.
+   - **Space Complexity**: O(1) - Only a fixed amount of memory is used for variables.
+
+2. **Binary Search**:
+   - **Time Complexity**: O(log n) - The algorithm divides the input size in half at each step.
+   - **Space Complexity**: O(1) - Only a fixed amount of memory is used for variables.
+
+3. **Merge Sort**:
+   - **Time Complexity**: O(n log n) - The algorithm divides the input into halves and merges them.
+   - **Space Complexity**: O(n) - Additional memory is used for the temporary arrays.
+
+Understanding time and space complexity helps in choosing the right algorithm for a problem, especially when dealing with large datasets or limited resources.
