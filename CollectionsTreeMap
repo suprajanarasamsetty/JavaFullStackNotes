@@ -1,0 +1,282 @@
+### TreeMap Overview
+
+A **TreeMap** in Java is a Red-Black tree-based implementation of the `Map` interface. It stores key-value pairs in a sorted order, either according to the natural ordering of its keys or by a custom comparator provided at the time of map creation. This makes it a good choice when you need a sorted map.
+
+### Characteristics of TreeMap
+
+1. **Sorted Keys**: Keys are stored in a sorted order.
+2. **No Null Keys**: Does not allow null keys, but allows null values.
+3. **Not Thread-Safe**: Requires external synchronization for concurrent access.
+
+### Key Methods in TreeMap
+
+#### 1. `put(K key, V value)`
+
+This method associates the specified value with the specified key in the map. If the map previously contained a mapping for the key, the old value is replaced.
+
+```java
+TreeMap<String, Integer> map = new TreeMap<>();
+map.put("C", 3);
+map.put("A", 1);
+map.put("B", 2);
+// TreeMap is now: {"A"=1, "B"=2, "C"=3}
+```
+
+#### 2. `remove(Object key)`
+
+This method removes the mapping for the specified key from the map if present.
+
+```java
+map.remove("B");
+// TreeMap is now: {"A"=1, "C"=3}
+```
+
+#### 3. `get(Object key)`
+
+This method returns the value to which the specified key is mapped, or `null` if the map contains no mapping for the key.
+
+```java
+Integer value = map.get("A");
+// value is 1
+
+Integer nullValue = map.get("B");
+// nullValue is null
+```
+
+#### 4. `clear()`
+
+This method removes all the mappings from the map.
+
+```java
+map.clear();
+// TreeMap is now: {}
+```
+
+#### 5. `size()`
+
+This method returns the number of key-value mappings in the map.
+
+```java
+int size = map.size();
+// size is 0 (after clear)
+```
+
+#### 6. `isEmpty()`
+
+This method returns `true` if the map contains no key-value mappings.
+
+```java
+boolean empty = map.isEmpty();
+// empty is true
+```
+
+#### 7. `containsKey(Object key)`
+
+This method returns `true` if the map contains a mapping for the specified key.
+
+```java
+map.put("A", 1);
+boolean hasA = map.containsKey("A");
+// hasA is true
+
+boolean hasB = map.containsKey("B");
+// hasB is false
+```
+
+#### 8. `containsValue(Object value)`
+
+This method returns `true` if the map contains one or more keys mapping to the specified value.
+
+```java
+boolean has1 = map.containsValue(1);
+// has1 is true
+
+boolean has2 = map.containsValue(2);
+// has2 is false
+```
+
+#### 9. `keySet()`
+
+This method returns a set view of the keys contained in the map.
+
+```java
+Set<String> keys = map.keySet();
+// keys is ["A"]
+```
+
+#### 10. `values()`
+
+This method returns a collection view of the values contained in the map.
+
+```java
+Collection<Integer> values = map.values();
+// values is [1]
+```
+
+#### 11. `entrySet()`
+
+This method returns a set view of the mappings contained in the map.
+
+```java
+Set<Map.Entry<String, Integer>> entries = map.entrySet();
+// entries is [{"A"=1}]
+```
+
+#### 12. `firstKey()`
+
+This method returns the first (lowest) key currently in the map.
+
+```java
+map.put("C", 3);
+map.put("A", 1);
+map.put("B", 2);
+String firstKey = map.firstKey();
+// firstKey is "A"
+```
+
+#### 13. `lastKey()`
+
+This method returns the last (highest) key currently in the map.
+
+```java
+String lastKey = map.lastKey();
+// lastKey is "C"
+```
+
+#### 14. `higherKey(K key)`
+
+This method returns the least key strictly greater than the given key, or `null` if there is no such key.
+
+```java
+String higherThanA = map.higherKey("A");
+// higherThanA is "B"
+```
+
+#### 15. `lowerKey(K key)`
+
+This method returns the greatest key strictly less than the given key, or `null` if there is no such key.
+
+```java
+String lowerThanC = map.lowerKey("C");
+// lowerThanC is "B"
+```
+
+#### 16. `ceilingKey(K key)`
+
+This method returns the least key greater than or equal to the given key, or `null` if there is no such key.
+
+```java
+String ceilingOfB = map.ceilingKey("B");
+// ceilingOfB is "B"
+```
+
+#### 17. `floorKey(K key)`
+
+This method returns the greatest key less than or equal to the given key, or `null` if there is no such key.
+
+```java
+String floorOfB = map.floorKey("B");
+// floorOfB is "B"
+```
+
+#### 18. `pollFirstEntry()`
+
+This method retrieves and removes the first (lowest) entry, or returns `null` if the map is empty.
+
+```java
+Map.Entry<String, Integer> firstEntry = map.pollFirstEntry();
+// firstEntry is {"A"=1}
+// TreeMap is now: {"B"=2, "C"=3}
+```
+
+#### 19. `pollLastEntry()`
+
+This method retrieves and removes the last (highest) entry, or returns `null` if the map is empty.
+
+```java
+Map.Entry<String, Integer> lastEntry = map.pollLastEntry();
+// lastEntry is {"C"=3}
+// TreeMap is now: {"B"=2}
+```
+
+### Example Usage
+
+Here's a complete example demonstrating the usage of various `TreeMap` methods:
+
+```java
+import java.util.TreeMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Collection;
+
+public class TreeMapExample {
+    public static void main(String[] args) {
+        // Create a TreeMap
+        TreeMap<String, Integer> map = new TreeMap<>();
+        
+        // Add elements using put()
+        map.put("C", 3);
+        map.put("A", 1);
+        map.put("B", 2);
+        System.out.println("Initial TreeMap: " + map); // Output: {A=1, B=2, C=3}
+        
+        // Remove an element using remove()
+        map.remove("B");
+        System.out.println("After removing 'B': " + map); // Output: {A=1, C=3}
+        
+        // Retrieve an element using get()
+        Integer value = map.get("A");
+        System.out.println("Value for 'A': " + value); // Output: 1
+        
+        // Check the size of the TreeMap
+        int size = map.size();
+        System.out.println("Size of TreeMap: " + size); // Output: 2
+        
+        // Check if the TreeMap is empty
+        boolean isEmpty = map.isEmpty();
+        System.out.println("Is TreeMap empty? " + isEmpty); // Output: false
+        
+        // Check if a key is present using containsKey()
+        boolean containsA = map.containsKey("A");
+        System.out.println("Contains key 'A'? " + containsA); // Output: true
+        
+        // Check if a value is present using containsValue()
+        boolean contains1 = map.containsValue(1);
+        System.out.println("Contains value 1? " + contains1); // Output: true
+        
+        // Get the first and last keys
+        String firstKey = map.firstKey();
+        String lastKey = map.lastKey();
+        System.out.println("First Key: " + firstKey); // Output: A
+        System.out.println("Last Key: " + lastKey); // Output: C
+        
+        // Get keys higher and lower than a specified key
+        String higherThanA = map.higherKey("A");
+        String lowerThanC = map.lowerKey("C");
+        System.out.println("Higher than 'A': " + higherThanA); // Output: B
+        System.out.println("Lower than 'C': " + lowerThanC); // Output: B
+        
+        // Get the ceiling and floor of a specified key
+        map.put("B", 2);
+        String ceilingOfB = map.ceilingKey("B");
+        String floorOfB = map.floorKey("B");
+        System.out.println("Ceiling of 'B': " + ceilingOfB); // Output: B
+        System.out.println("Floor of 'B': " + floorOfB); // Output: B
+        
+        // Poll the first and last entries
+        Map.Entry<String, Integer> polledFirst = map.pollFirstEntry();
+        Map.Entry<String, Integer> polledLast = map.pollLastEntry();
+        System.out.println("Polled First Entry: " + polledFirst); // Output: A=1
+        System.out.println("Polled Last Entry: " + polledLast); // Output: C=3
+        System.out.println("TreeMap after polling: " + map); // Output: {B=2}
+        
+        // Clear the TreeMap
+        map.clear();
+        System.out.println("TreeMap after clear(): " + map); // Output: {}
+    }
+}
+```
+
+### Summary
+
+The `TreeMap` class in Java provides a way to store key-value pairs in a sorted order. Key methods include `put` for adding entries, `remove` for deleting entries, `get` for retrieving values
