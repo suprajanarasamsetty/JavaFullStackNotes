@@ -1,0 +1,100 @@
+### HashSet Overview
+
+A **HashSet** in Java is a collection that uses a hash table for storage. It implements the `Set` interface and provides a way to store elements without duplicates. HashSet is commonly used when you need to maintain a collection of unique elements with efficient insertion, removal, and lookup operations.
+
+### Characteristics of HashSet
+
+1. **Unique Elements**: No duplicates are allowed.
+2. **Hash Table Storage**: Internally uses a hash table for efficient operations.
+3. **Allows Null Elements**: Unlike the initial statement, HashSet actually does allow null elements.
+4. **Not Thread-Safe**: Concurrent access should be synchronized externally if needed.
+
+### Key Methods in HashSet
+
+#### 1. `add(E e)`
+
+This method adds the specified element to the set if it is not already present.
+
+```java
+HashSet<String> set = new HashSet<>();
+set.add("A");
+set.add("B");
+set.add("C");
+// HashSet is now: ["A", "B", "C"]
+```
+
+#### 2. `remove(Object o)`
+
+This method removes the specified element from the set if it is present.
+
+```java
+set.remove("B");
+// HashSet is now: ["A", "C"]
+```
+
+#### 3. `contains(Object o)`
+
+This method returns `true` if the set contains the specified element.
+
+```java
+boolean containsA = set.contains("A");
+// containsA is true
+
+boolean containsB = set.contains("B");
+// containsB is false
+```
+
+#### 4. `clear()`
+
+This method removes all the elements from the set.
+
+```java
+set.clear();
+// HashSet is now: []
+```
+
+### Example Usage
+
+Here's a complete example demonstrating the usage of various HashSet methods:
+
+```java
+import java.util.HashSet;
+
+public class HashSetExample {
+    public static void main(String[] args) {
+        // Create a HashSet
+        HashSet<String> set = new HashSet<>();
+        
+        // Add elements using add()
+        set.add("A");
+        set.add("B");
+        set.add("C");
+        System.out.println("Initial HashSet: " + set); // Output: [A, B, C]
+        
+        // Add a duplicate element
+        boolean added = set.add("A");
+        System.out.println("Add duplicate 'A': " + added); // Output: false
+        System.out.println("HashSet after adding duplicate: " + set); // Output: [A, B, C]
+        
+        // Remove an element using remove()
+        boolean removed = set.remove("B");
+        System.out.println("Remove 'B': " + removed); // Output: true
+        System.out.println("HashSet after removing 'B': " + set); // Output: [A, C]
+        
+        // Check if an element is present using contains()
+        boolean containsA = set.contains("A");
+        System.out.println("Contains 'A': " + containsA); // Output: true
+        
+        boolean containsB = set.contains("B");
+        System.out.println("Contains 'B': " + containsB); // Output: false
+        
+        // Clear the HashSet
+        set.clear();
+        System.out.println("HashSet after clear(): " + set); // Output: []
+    }
+}
+```
+
+### Summary
+
+The `HashSet` class in Java provides a way to store a collection of unique elements using a hash table. Key methods include `add` for inserting elements, `remove` for deleting elements, `contains` for checking the presence of elements, and `clear` for removing all elements from the set. HashSet is not thread-safe and allows null elements, which makes it flexible for various use cases where unique elements are required.
