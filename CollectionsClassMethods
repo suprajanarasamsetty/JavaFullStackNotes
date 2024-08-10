@@ -1,0 +1,151 @@
+### `Collections` Class in Java
+
+The `Collections` class in Java provides static utility methods to operate on collections, such as sorting, searching, reversing, and finding the minimum. It is part of the `java.util` package and offers various operations that can be performed on collections and return modified collections.
+
+### Key Methods in the `Collections` Class
+
+#### 1. `sort(List<T> list)`
+
+Sorts the specified list into ascending order according to the natural ordering of its elements.
+
+```java
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SortExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = new ArrayList<>();
+        numbers.add(3);
+        numbers.add(1);
+        numbers.add(4);
+        numbers.add(2);
+        
+        Collections.sort(numbers);
+        System.out.println("Sorted List: " + numbers); // Output: [1, 2, 3, 4]
+    }
+}
+```
+
+#### 2. `binarySearch(List<? extends Comparable<? super T>> list, T key)`
+
+Performs a binary search for the specified value in the specified list. The list must be sorted into ascending order according to the natural ordering of its elements.
+
+```java
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
+
+public class BinarySearchExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = new ArrayList<>();
+        numbers.add(1);
+        numbers.add(2);
+        numbers.add(3);
+        numbers.add(4);
+        
+        int index = Collections.binarySearch(numbers, 3);
+        System.out.println("Index of 3: " + index); // Output: 2
+    }
+}
+```
+
+#### 3. `reverse(List<?> list)`
+
+Reverses the order of the elements in the specified list.
+
+```java
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ReverseExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = new ArrayList<>();
+        numbers.add(1);
+        numbers.add(2);
+        numbers.add(3);
+        numbers.add(4);
+        
+        Collections.reverse(numbers);
+        System.out.println("Reversed List: " + numbers); // Output: [4, 3, 2, 1]
+    }
+}
+```
+
+#### 4. `shuffle(List<?> list)`
+
+Randomly permutes the elements in the specified list.
+
+```java
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ShuffleExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = new ArrayList<>();
+        numbers.add(1);
+        numbers.add(2);
+        numbers.add(3);
+        numbers.add(4);
+        
+        Collections.shuffle(numbers);
+        System.out.println("Shuffled List: " + numbers); // Output: [3, 1, 4, 2] (example, actual output will vary)
+    }
+}
+```
+
+#### 5. `copy(List<? super T> dest, List<? extends T> src)`
+
+Copies all of the elements from one list into another. The destination list must be at least as long as the source list. If it is longer, the remaining elements in the destination list are unaffected.
+
+```java
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CopyExample {
+    public static void main(String[] args) {
+        List<Integer> src = new ArrayList<>();
+        src.add(1);
+        src.add(2);
+        src.add(3);
+        
+        List<Integer> dest = new ArrayList<>(src.size());
+        for (int i = 0; i < src.size(); i++) {
+            dest.add(0); // Initialize destination list with default values
+        }
+        
+        Collections.copy(dest, src);
+        System.out.println("Destination List: " + dest); // Output: [1, 2, 3]
+    }
+}
+```
+
+#### 6. `min(Collection<? extends T> coll)`
+
+Returns the minimum element of the given collection, according to the natural ordering of its elements.
+
+```java
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MinExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = new ArrayList<>();
+        numbers.add(3);
+        numbers.add(1);
+        numbers.add(4);
+        numbers.add(2);
+        
+        int min = Collections.min(numbers);
+        System.out.println("Minimum Element: " + min); // Output: 1
+    }
+}
+```
+
+### Summary
+
+The `Collections` class provides a variety of static utility methods for operating on collections, making it easier to perform common tasks such as sorting, searching, reversing, shuffling, copying, and finding the minimum element. These methods enhance the functionality of the Java Collections Framework and help developers manage collections more efficiently.
