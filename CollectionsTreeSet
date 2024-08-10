@@ -1,0 +1,202 @@
+### TreeSet Overview
+
+A **TreeSet** in Java is a `NavigableSet` implementation based on a `TreeMap`. It stores elements in a sorted order, either according to their natural ordering or a custom comparator provided at the time of set creation. This makes it a good choice when you need to maintain a collection of unique elements in a sorted order.
+
+### Characteristics of TreeSet
+
+1. **Sorted Elements**: Elements are stored in a sorted order.
+2. **No Null Elements**: Does not allow null elements.
+3. **Not Thread-Safe**: Multiple threads should not access it concurrently without proper synchronization.
+
+### Key Methods in TreeSet
+
+#### 1. `add(E e)`
+
+This method adds the specified element to the set if it is not already present.
+
+```java
+TreeSet<String> set = new TreeSet<>();
+set.add("C");
+set.add("A");
+set.add("B");
+// TreeSet is now: ["A", "B", "C"]
+```
+
+#### 2. `remove(Object o)`
+
+This method removes the specified element from the set if it is present.
+
+```java
+set.remove("B");
+// TreeSet is now: ["A", "C"]
+```
+
+#### 3. `contains(Object o)`
+
+This method returns `true` if the set contains the specified element.
+
+```java
+boolean containsA = set.contains("A");
+// containsA is true
+
+boolean containsB = set.contains("B");
+// containsB is false
+```
+
+#### 4. `clear()`
+
+This method removes all the elements from the set.
+
+```java
+set.clear();
+// TreeSet is now: []
+```
+
+#### 5. `first()`
+
+This method returns the first (lowest) element currently in the set.
+
+```java
+set.add("A");
+set.add("B");
+set.add("C");
+String firstElement = set.first();
+// firstElement is "A"
+```
+
+#### 6. `last()`
+
+This method returns the last (highest) element currently in the set.
+
+```java
+String lastElement = set.last();
+// lastElement is "C"
+```
+
+#### 7. `higher(E e)`
+
+This method returns the least element in this set strictly greater than the given element, or `null` if there is no such element.
+
+```java
+String higherThanA = set.higher("A");
+// higherThanA is "B"
+```
+
+#### 8. `lower(E e)`
+
+This method returns the greatest element in this set strictly less than the given element, or `null` if there is no such element.
+
+```java
+String lowerThanC = set.lower("C");
+// lowerThanC is "B"
+```
+
+#### 9. `ceiling(E e)`
+
+This method returns the least element in this set greater than or equal to the given element, or `null` if there is no such element.
+
+```java
+String ceilingOfB = set.ceiling("B");
+// ceilingOfB is "B"
+```
+
+#### 10. `floor(E e)`
+
+This method returns the greatest element in this set less than or equal to the given element, or `null` if there is no such element.
+
+```java
+String floorOfB = set.floor("B");
+// floorOfB is "B"
+```
+
+#### 11. `pollFirst()`
+
+This method retrieves and removes the first (lowest) element, or returns `null` if the set is empty.
+
+```java
+String firstElement = set.pollFirst();
+// firstElement is "A"
+// TreeSet is now: ["B", "C"]
+```
+
+#### 12. `pollLast()`
+
+This method retrieves and removes the last (highest) element, or returns `null` if the set is empty.
+
+```java
+String lastElement = set.pollLast();
+// lastElement is "C"
+// TreeSet is now: ["B"]
+```
+
+### Example Usage
+
+Here's a complete example demonstrating the usage of various `TreeSet` methods:
+
+```java
+import java.util.TreeSet;
+
+public class TreeSetExample {
+    public static void main(String[] args) {
+        // Create a TreeSet
+        TreeSet<String> set = new TreeSet<>();
+        
+        // Add elements
+        set.add("C");
+        set.add("A");
+        set.add("B");
+        System.out.println("Initial TreeSet: " + set); // Output: [A, B, C]
+        
+        // Add a duplicate element
+        boolean added = set.add("A");
+        System.out.println("Add duplicate 'A': " + added); // Output: false
+        System.out.println("TreeSet after adding duplicate: " + set); // Output: [A, B, C]
+        
+        // Remove an element
+        boolean removed = set.remove("B");
+        System.out.println("Remove 'B': " + removed); // Output: true
+        System.out.println("TreeSet after removing 'B': " + set); // Output: [A, C]
+        
+        // Check if an element is present
+        boolean containsA = set.contains("A");
+        System.out.println("Contains 'A': " + containsA); // Output: true
+        
+        boolean containsB = set.contains("B");
+        System.out.println("Contains 'B': " + containsB); // Output: false
+        
+        // Get the first and last elements
+        String firstElement = set.first();
+        String lastElement = set.last();
+        System.out.println("First Element: " + firstElement); // Output: A
+        System.out.println("Last Element: " + lastElement); // Output: C
+        
+        // Get elements higher and lower than a specified element
+        String higherThanA = set.higher("A");
+        String lowerThanC = set.lower("C");
+        System.out.println("Higher than 'A': " + higherThanA); // Output: C
+        System.out.println("Lower than 'C': " + lowerThanC); // Output: A
+        
+        // Get the ceiling and floor of a specified element
+        set.add("B");
+        String ceilingOfB = set.ceiling("B");
+        String floorOfB = set.floor("B");
+        System.out.println("Ceiling of 'B': " + ceilingOfB); // Output: B
+        System.out.println("Floor of 'B': " + floorOfB); // Output: B
+        
+        // Poll the first and last elements
+        String polledFirst = set.pollFirst();
+        String polledLast = set.pollLast();
+        System.out.println("Polled First Element: " + polledFirst); // Output: A
+        System.out.println("Polled Last Element: " + polledLast); // Output: C
+        System.out.println("TreeSet after polling: " + set); // Output: [B]
+        
+        // Clear the TreeSet
+        set.clear();
+        System.out.println("TreeSet after clear(): " + set); // Output: []
+    }
+}
+```
+
+### Summary
+
+The `TreeSet` class in Java provides a way to store a collection of unique elements in a sorted order. Key methods include `add` for inserting elements, `remove` for deleting elements, `contains` for checking the presence of elements, `clear` for removing all elements, `first` and `last` for retrieving the first and last elements, and several methods (`higher`, `lower`, `ceiling`, `floor`) for navigating through the set based on the natural or custom order. The class does not allow null elements and is not thread-safe, so external synchronization is required for concurrent access.
