@@ -1,0 +1,129 @@
+### PriorityQueue Overview
+
+A **PriorityQueue** in Java is a special type of queue where elements are processed based on their priority rather than their order of insertion. It is implemented as a priority heap, which ensures that the element with the highest priority is always at the front of the queue. The default priority is the natural ordering (for example, for integers, the natural ordering is ascending), but you can provide a custom comparator to define the priority.
+
+### Characteristics of PriorityQueue
+
+1. **Priority-Based Processing**: Elements are ordered based on their priority.
+2. **Heap Implementation**: Internally uses a priority heap.
+3. **Does Not Allow Null Values**: Adding null values will throw a `NullPointerException`.
+4. **Not Thread-Safe**: Concurrent access should be synchronized externally.
+
+### Key Methods in PriorityQueue
+
+#### 1. `add(E element)`
+
+This method inserts the specified element into the priority queue. It throws an `IllegalStateException` if no space is available (which is unlikely since the queue is resizable).
+
+```java
+PriorityQueue<Integer> pq = new PriorityQueue<>();
+pq.add(4);
+pq.add(1);
+pq.add(3);
+pq.add(2);
+// PriorityQueue is now: [1, 2, 3, 4] (based on natural ordering)
+```
+
+#### 2. `offer(E element)`
+
+This method inserts the specified element into the priority queue. It is preferable to `add(E)` as it provides better behavior in capacity-restricted queues (though `PriorityQueue` is not capacity-restricted).
+
+```java
+boolean result = pq.offer(5);
+// PriorityQueue is now: [1, 2, 3, 4, 5]
+// result is true
+```
+
+#### 3. `peek()`
+
+This method retrieves, but does not remove, the head of the queue. It returns `null` if the queue is empty.
+
+```java
+Integer head = pq.peek();
+// head is 1
+// PriorityQueue remains: [1, 2, 3, 4, 5]
+```
+
+#### 4. `poll()`
+
+This method retrieves and removes the head of the queue. It returns `null` if the queue is empty.
+
+```java
+Integer head = pq.poll();
+// head is 1
+// PriorityQueue is now: [2, 4, 3, 5]
+```
+
+### Example Usage
+
+Here's a complete example demonstrating the usage of various `PriorityQueue` methods:
+
+```java
+import java.util.PriorityQueue;
+
+public class PriorityQueueExample {
+    public static void main(String[] args) {
+        // Create a PriorityQueue
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        
+        // Add elements using add()
+        pq.add(4);
+        pq.add(1);
+        pq.add(3);
+        pq.add(2);
+        System.out.println("Initial PriorityQueue: " + pq); // Output: [1, 2, 3, 4]
+        
+        // Add an element using offer()
+        boolean result = pq.offer(5);
+        System.out.println("After offer(5): " + pq); // Output: [1, 2, 3, 4, 5]
+        System.out.println("Offer result: " + result);  // Output: true
+        
+        // Retrieve the head element using peek()
+        Integer headElement = pq.peek();
+        System.out.println("Head Element: " + headElement); // Output: 1
+        System.out.println("PriorityQueue after peek(): " + pq); // Output: [1, 2, 3, 4, 5]
+        
+        // Remove and retrieve the head element using poll()
+        Integer polledElement = pq.poll();
+        System.out.println("Polled Element: " + polledElement); // Output: 1
+        System.out.println("PriorityQueue after poll(): " + pq); // Output: [2, 4, 3, 5]
+        
+        // Try to poll from an empty PriorityQueue
+        pq.clear();
+        Integer emptyPoll = pq.poll();
+        System.out.println("Polled from empty PriorityQueue: " + emptyPoll); // Output: null
+    }
+}
+```
+
+### Using a Custom Comparator
+
+You can also create a `PriorityQueue` with a custom comparator to define a different priority order. For example, to create a max-heap:
+
+```java
+import java.util.PriorityQueue;
+import java.util.Comparator;
+
+public class MaxHeapExample {
+    public static void main(String[] args) {
+        // Create a PriorityQueue with a custom comparator for a max-heap
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
+        
+        // Add elements
+        maxHeap.add(4);
+        maxHeap.add(1);
+        maxHeap.add(3);
+        maxHeap.add(2);
+        System.out.println("Max-Heap PriorityQueue: " + maxHeap); // Output: [4, 2, 3, 1]
+        
+        // Retrieve and remove the head element
+        Integer head = maxHeap.poll();
+        System.out.println("Polled Element from Max-Heap: " + head); // Output: 4
+        System.out.println("Max-Heap after poll(): " + maxHeap); // Output: [3, 2, 1]
+    }
+}
+```
+
+### Summary
+
+The `PriorityQueue` class in Java provides a way to manage elements based on their priority using a heap. It offers methods such as `add` and `offer` to insert elements, `peek` to view the highest-priority element, and `poll` to retrieve and remove the highest-priority element. It does not allow null values and is not thread-safe, requiring external synchronization for concurrent access. The default behavior is to order elements based on their natural ordering, but a custom comparator can be provided to define a different priority order.
