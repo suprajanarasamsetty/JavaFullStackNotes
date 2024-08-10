@@ -1,0 +1,103 @@
+A **functional interface** in Java is an interface that contains exactly one abstract method. This makes it ideal for defining a single action or functionality that can be passed around as a parameter, used in lambda expressions, or method references.
+
+### Key Points:
+1. **Single Abstract Method:** It has only one abstract method, but it can have multiple default or static methods.
+2. **@FunctionalInterface Annotation:** This annotation can be used to explicitly specify that the interface is intended to be a functional interface, but it is not mandatory.
+3. **Lambda Expressions:** Functional interfaces are often used with lambda expressions for a concise way to implement the single abstract method.
+
+### Example of a Functional Interface
+
+#### Definition:
+Let's define a simple functional interface called `Calculator` that has one abstract method for performing an operation on two integers.
+
+```java
+@FunctionalInterface
+public interface Calculator {
+    int operate(int a, int b);
+}
+```
+
+Here, `operate` is the single abstract method.
+
+### Using the Functional Interface
+
+#### With Lambda Expression:
+We can use a lambda expression to define the behavior of the `operate` method. This provides a concise way to implement the interface.
+
+```java
+public class FunctionalInterfaceExample {
+    public static void main(String[] args) {
+        // Using lambda expression to define the operate method for addition
+        Calculator add = (a, b) -> a + b;
+        
+        // Using lambda expression to define the operate method for subtraction
+        Calculator subtract = (a, b) -> a - b;
+        
+        System.out.println("Addition: " + add.operate(5, 3)); // Output: 8
+        System.out.println("Subtraction: " + subtract.operate(5, 3)); // Output: 2
+    }
+}
+```
+
+In this example, we use lambda expressions to define the behavior of the `operate` method for addition and subtraction operations.
+
+#### With Method Reference:
+We can also use method references to refer to an existing method that matches the abstract method's signature.
+
+```java
+public class FunctionalInterfaceExample {
+    public static void main(String[] args) {
+        // Using method reference to define the operate method
+        Calculator multiply = FunctionalInterfaceExample::multiplyOperation;
+
+        System.out.println("Multiplication: " + multiply.operate(5, 3)); // Output: 15
+    }
+
+    public static int multiplyOperation(int a, int b) {
+        return a * b;
+    }
+}
+```
+
+In this example, we use a method reference to refer to the `multiplyOperation` method, which matches the signature of the `operate` method in the `Calculator` interface.
+
+### Real-Time Example: Runnable Interface
+
+The `Runnable` interface from the Java standard library is a functional interface. It has a single abstract method, `run`, which makes it ideal for use with lambda expressions or method references.
+
+#### Traditional Implementation:
+
+```java
+public class RunnableExample {
+    public static void main(String[] args) {
+        // Traditional implementation using anonymous class
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Task is running");
+            }
+        };
+
+        new Thread(task).start();
+    }
+}
+```
+
+#### Using Lambda Expression:
+
+```java
+public class RunnableExample {
+    public static void main(String[] args) {
+        // Using lambda expression
+        Runnable task = () -> System.out.println("Task is running");
+
+        new Thread(task).start();
+    }
+}
+```
+
+In this example, using a lambda expression significantly simplifies the implementation of the `Runnable` interface.
+
+### Summary
+
+A functional interface in Java is an interface with exactly one abstract method, which makes it suitable for use with lambda expressions and method references. This feature promotes cleaner and more readable code, especially in situations where you need to pass behavior as a parameter, like defining tasks for threads or performing operations in a more functional programming style.
