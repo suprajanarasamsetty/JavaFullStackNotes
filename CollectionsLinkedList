@@ -1,0 +1,157 @@
+### LinkedList Overview
+
+A **LinkedList** in Java is a data structure that implements both the `List` and `Deque` interfaces. It is a doubly-linked list, meaning each element (node) has references to both its previous and next elements. This allows for efficient insertion and removal of elements from both ends of the list.
+
+### Characteristics of LinkedList
+
+1. **Order of Insertion**: LinkedList maintains the order in which elements are added.
+2. **Allows Null Elements**: You can store null values in a LinkedList.
+3. **Not Thread-Safe**: If multiple threads access a LinkedList concurrently, and at least one thread modifies it, external synchronization is needed.
+
+### Key Methods in LinkedList
+
+#### Methods from `List` Interface
+
+1. **add(E e)**: Appends the specified element to the end of the list.
+   ```java
+   LinkedList<String> list = new LinkedList<>();
+   list.add("A");
+   list.add("B");
+   list.add("C");
+   // List is now: ["A", "B", "C"]
+   ```
+
+2. **add(int index, E element)**: Inserts the specified element at the specified position in the list.
+   ```java
+   list.add(1, "D");
+   // List is now: ["A", "D", "B", "C"]
+   ```
+
+3. **get(int index)**: Returns the element at the specified position in the list.
+   ```java
+   String element = list.get(2);
+   // element is "B"
+   ```
+
+4. **remove(int index)**: Removes the element at the specified position in the list.
+   ```java
+   list.remove(2);
+   // List is now: ["A", "D", "C"]
+   ```
+
+5. **size()**: Returns the number of elements in the list.
+   ```java
+   int size = list.size();
+   // size is 3
+   ```
+
+#### Methods from `Queue` and `Deque` Interfaces
+
+1. **addFirst(E e)**: Inserts the specified element at the beginning of the list.
+   ```java
+   list.addFirst("E");
+   // List is now: ["E", "A", "D", "C"]
+   ```
+
+2. **addLast(E e)**: Inserts the specified element at the end of the list.
+   ```java
+   list.addLast("F");
+   // List is now: ["E", "A", "D", "C", "F"]
+   ```
+
+3. **removeFirst()**: Removes and returns the first element from the list.
+   ```java
+   String first = list.removeFirst();
+   // first is "E"
+   // List is now: ["A", "D", "C", "F"]
+   ```
+
+4. **removeLast()**: Removes and returns the last element from the list.
+   ```java
+   String last = list.removeLast();
+   // last is "F"
+   // List is now: ["A", "D", "C"]
+   ```
+
+5. **getFirst()**: Returns the first element in the list without removing it.
+   ```java
+   String first = list.getFirst();
+   // first is "A"
+   ```
+
+6. **getLast()**: Returns the last element in the list without removing it.
+   ```java
+   String last = list.getLast();
+   // last is "C"
+   ```
+
+7. **offer(E e)**: Adds the specified element as the last element of the list.
+   ```java
+   list.offer("G");
+   // List is now: ["A", "D", "C", "G"]
+   ```
+
+8. **poll()**: Retrieves and removes the head (first element) of the list.
+   ```java
+   String head = list.poll();
+   // head is "A"
+   // List is now: ["D", "C", "G"]
+   ```
+
+### Example Usage
+
+Here's a complete example demonstrating the usage of various LinkedList methods:
+
+```java
+import java.util.LinkedList;
+
+public class LinkedListExample {
+    public static void main(String[] args) {
+        // Create a LinkedList
+        LinkedList<String> list = new LinkedList<>();
+        
+        // Add elements
+        list.add("A");
+        list.add("B");
+        list.add("C");
+        System.out.println("Initial List: " + list); // Output: [A, B, C]
+        
+        // Add elements at specific positions
+        list.add(1, "D");
+        System.out.println("After add(1, D): " + list); // Output: [A, D, B, C]
+        
+        // Get elements
+        String element = list.get(2);
+        System.out.println("Element at index 2: " + element); // Output: B
+        
+        // Remove elements
+        list.remove(2);
+        System.out.println("After remove(2): " + list); // Output: [A, D, C]
+        
+        // Add elements to the beginning and end
+        list.addFirst("E");
+        list.addLast("F");
+        System.out.println("After addFirst(E) and addLast(F): " + list); // Output: [E, A, D, C, F]
+        
+        // Remove elements from the beginning and end
+        String first = list.removeFirst();
+        String last = list.removeLast();
+        System.out.println("Removed first: " + first + ", last: " + last); // Output: E, F
+        System.out.println("After removeFirst() and removeLast(): " + list); // Output: [A, D, C]
+        
+        // Get first and last elements
+        String firstElement = list.getFirst();
+        String lastElement = list.getLast();
+        System.out.println("First element: " + firstElement + ", Last element: " + lastElement); // Output: A, C
+        
+        // Use offer and poll methods
+        list.offer("G");
+        System.out.println("After offer(G): " + list); // Output: [A, D, C, G]
+        String head = list.poll();
+        System.out.println("Polled head: " + head); // Output: A
+        System.out.println("After poll(): " + list); // Output: [D, C, G]
+    }
+}
+```
+
+This example shows how to use various LinkedList methods to manipulate a list, including adding, removing, and accessing elements. The LinkedList class provides a flexible way to manage ordered collections of elements with efficient insertions and deletions.
