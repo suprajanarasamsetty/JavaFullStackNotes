@@ -1,0 +1,262 @@
+### Synchronization in Java
+
+**Definition:**
+Synchronization is a mechanism in Java that ensures that only one thread can access a shared resource at a time. This is crucial for preventing data inconsistency and ensuring thread safety when multiple threads attempt to modify the same resource simultaneously.
+
+### Why Synchronization is Needed:
+
+Consider a scenario where two threads are trying to update the same bank account balance at the same time. Without synchronization, this can lead to incorrect balances due to race conditions, where the outcome depends on the sequence or timing of the threads' execution.
+
+### How Synchronization Works:
+
+Synchronization ensures that only one thread can access a shared resource (like a variable, object, or method) at a time by using locks. When a thread acquires a lock on a synchronized resource, other threads must wait until the lock is released.
+
+### Types of Synchronization:
+
+1. **Synchronized Method:**
+   - A synchronized method locks the object for which it is called.
+   - Only one thread can execute a synchronized method of an object at any given time.
+
+```java
+class BankAccount {
+    private int balance = 100;
+
+    // Synchronized method
+    public synchronized void deposit(int amount) {
+        balance += amount;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+}
+
+class AccountHolder extends Thread {
+    private BankAccount account;
+
+    public AccountHolder(BankAccount account) {
+        this.account = account;
+    }
+
+    public void run() {
+        for (int i = 0; i < 10; i++) {
+            account.deposit(10);
+            System.out.println("Balance after deposit: " + account.getBalance());
+        }
+    }
+}
+
+public class SynchronizationExample {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount();
+        AccountHolder holder1 = new AccountHolder(account);
+        AccountHolder holder2 = new AccountHolder(account);
+
+        holder1.start();
+        holder2.start();
+    }
+}
+```
+
+In this example:
+- The `deposit` method is synchronized, ensuring that only one thread can update the balance at a time.
+- Without synchronization, both threads could simultaneously read the balance, add the deposit, and write back the balance, resulting in incorrect totals.
+
+2. **Synchronized Block:**
+   - A synchronized block allows more fine-grained control over the synchronization. You can synchronize only a part of a method instead of the whole method.
+   - This can be useful when you need to synchronize access to a specific part of a method or a particular object.
+
+```java
+class BankAccount {
+    private int balance = 100;
+
+    public void deposit(int amount) {
+        synchronized(this) {  // Synchronized block
+            balance += amount;
+        }
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+}
+
+class AccountHolder extends Thread {
+    private BankAccount account;
+
+    public AccountHolder(BankAccount account) {
+        this.account = account;
+    }
+
+    public void run() {
+        for (int i = 0; i < 10; i++) {
+            account.deposit(10);
+            System.out.println("Balance after deposit: " + account.getBalance());
+        }
+    }
+}
+
+public class SynchronizationExample {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount();
+        AccountHolder holder1 = new AccountHolder(account);
+        AccountHolder holder2 = new AccountHolder(account);
+
+        holder1.start();
+        holder2.start();
+    }
+}
+```
+
+### Key Points:
+
+- **Locking Mechanism:** When a thread enters a synchronized method or block, it acquires the lock associated with the object. Other threads trying to enter any synchronized method or block on the same object are blocked until the lock is released.
+- **Object Lock:** Each object in Java has an intrinsic lock (or monitor lock). A synchronized method or block can lock this intrinsic lock, preventing other threads from accessing any synchronized method or block on the same object.
+- **Thread Safety:** Synchronization helps in achieving thread safety, ensuring that the shared resource is accessed and modified by only one thread at a time.
+
+### Example without Synchronization (for comparison):
+
+```java
+class BankAccount {
+    private int balance = 100;
+
+    // Non-synchronized method
+    public void deposit(int amount) {
+        balance += amount;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+}
+
+class AccountHolder extends Thread {
+    private BankAccount account;
+
+    public AccountHolder(BankAccount account) {
+        this.account = account;
+    }
+
+    public void run() {
+        for (int i = 0; i < 10; i++) {
+            account.deposit(10);
+            System.out.println("Balance after deposit: " + account.getBalance());
+        }
+    }
+}
+
+public class SynchronizationExample {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount();
+        AccountHolder holder1 = new AccountHolder(account);
+        AccountHolder holder2 = new AccountHolder(account);
+
+        holder1.start();
+        holder2.start();
+    }
+}
+```
+
+In this non-synchronized example, multiple threads can simultaneously update the balance, leading to incorrect results due to race conditions.
+________________________________________________________________________________________________________________________________________________________________________________________________________
+
+### Real-Time Example of Synchronization: Online Ticket Booking System
+
+**Scenario:**
+
+Imagine an online ticket booking system where multiple users can book seats for a concert. The system needs to ensure that the same seat is not booked by more than one user simultaneously. Synchronization is crucial here to prevent race conditions and ensure data consistency.
+
+### Problem:
+
+Without synchronization, multiple users could try to book the same seat at the same time, leading to data inconsistency and overselling seats.
+
+### Solution:
+
+Use synchronization to ensure that only one thread can check and book a seat at a time.
+
+### Example Code:
+
+Here's how you can implement synchronization in an online ticket booking system:
+
+```java
+class TicketBookingSystem {
+    private int availableSeats = 10;
+
+    // Synchronized method to book a seat
+    public synchronized boolean bookSeat(String customerName) {
+        if (availableSeats > 0) {
+            System.out.println(customerName + " booked a seat. Seats left: " + (availableSeats - 1));
+            availableSeats--;
+            return true;
+        } else {
+            System.out.println("Sorry, " + customerName + ". No seats available.");
+            return false;
+        }
+    }
+}
+
+class Customer extends Thread {
+    private TicketBookingSystem bookingSystem;
+    private String customerName;
+
+    public Customer(TicketBookingSystem bookingSystem, String customerName) {
+        this.bookingSystem = bookingSystem;
+        this.customerName = customerName;
+    }
+
+    public void run() {
+        bookingSystem.bookSeat(customerName);
+    }
+}
+
+public class TicketBookingExample {
+    public static void main(String[] args) {
+        TicketBookingSystem bookingSystem = new TicketBookingSystem();
+
+        Customer customer1 = new Customer(bookingSystem, "Customer 1");
+        Customer customer2 = new Customer(bookingSystem, "Customer 2");
+        Customer customer3 = new Customer(bookingSystem, "Customer 3");
+        Customer customer4 = new Customer(bookingSystem, "Customer 4");
+        Customer customer5 = new Customer(bookingSystem, "Customer 5");
+        Customer customer6 = new Customer(bookingSystem, "Customer 6");
+        Customer customer7 = new Customer(bookingSystem, "Customer 7");
+        Customer customer8 = new Customer(bookingSystem, "Customer 8");
+        Customer customer9 = new Customer(bookingSystem, "Customer 9");
+        Customer customer10 = new Customer(bookingSystem, "Customer 10");
+        Customer customer11 = new Customer(bookingSystem, "Customer 11");
+
+        // Start booking threads
+        customer1.start();
+        customer2.start();
+        customer3.start();
+        customer4.start();
+        customer5.start();
+        customer6.start();
+        customer7.start();
+        customer8.start();
+        customer9.start();
+        customer10.start();
+        customer11.start();
+    }
+}
+```
+
+### Explanation:
+
+1. **TicketBookingSystem Class:**
+   - This class has a method `bookSeat` which is synchronized to ensure that only one thread can execute it at a time.
+   - The method checks if there are available seats and books a seat if available, otherwise it informs the customer that no seats are available.
+
+2. **Customer Class:**
+   - This class represents a customer trying to book a seat. It extends `Thread` and overrides the `run` method to call the `bookSeat` method of `TicketBookingSystem`.
+
+3. **TicketBookingExample Class:**
+   - This is the main class where the `TicketBookingSystem` object is created, and multiple `Customer` threads are started to simulate concurrent seat booking.
+
+### Benefits of Synchronization in this Example:
+
+- **Thread Safety:** Ensures that only one customer can book a seat at a time, preventing multiple bookings for the same seat.
+- **Data Consistency:** Maintains the correct count of available seats, avoiding overselling.
+- **Preventing Race Conditions:** Synchronization prevents threads from interfering with each other, ensuring the integrity of the booking process.
+
+This example demonstrates how synchronization is used in real-time applications to manage concurrent access to shared resources effectively.
