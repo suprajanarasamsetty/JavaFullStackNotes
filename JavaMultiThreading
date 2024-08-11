@@ -3,3 +3,138 @@ Independent Program: A process is like an individual program that is running on 
 Own Memory Space: Each process has its own private area in memory. Think of it as having its own room where it keeps all its data and instructions.
 Resources: A process has everything it needs to run, such as CPU time, memory, and file handles.
 Isolation: Processes do not share their room (memory space) or other resources directly with other processes. Each process is isolated, meaning what happens in one process doesn’t directly affect another.
+
+
+### Multithreading in Java
+
+**Processes and Threads:**
+
+- **Process:**
+  - A process has its own self-contained execution environment.
+  - Each process has its own memory space and resources.
+  - Processes do not share memory or resources directly.
+
+- **Thread:**
+  - Threads exist within a process.
+  - Every process has at least one thread.
+  - Threads share the process's resources, including memory and open files.
+  - The Java Virtual Machine (JVM) allows multiple threads to run concurrently within a single process.
+  - Every thread has a priority, with higher-priority threads given preference for execution.
+
+**Daemon Threads:**
+- Daemon threads are low-priority threads running in the background.
+- They serve user threads and are useful for tasks like garbage collection.
+- When the JVM starts, it initiates a single non-daemon thread to call the main method.
+- The JVM continues running until:
+  - The `exit` method for `Runtime` is called.
+  - All non-daemon threads have finished execution, either by returning or throwing an exception.
+
+**Creating Threads:**
+
+As a programmer, you can create and manage threads. The main thread can spawn additional threads. There are two primary ways to create a thread:
+
+1. **Extend the `Thread` class:**
+   - Create a new class that extends `Thread`.
+   - Override the `run` method to define the thread's behavior.
+
+```java
+class MyThread extends Thread {
+    public void run() {
+        System.out.println("Thread is running.");
+    }
+    
+    public static void main(String[] args) {
+        MyThread t1 = new MyThread();
+        t1.start();  // Starts the thread
+    }
+}
+```
+
+2. **Implement the `Runnable` interface:**
+   - Create a class that implements the `Runnable` interface.
+   - Pass an instance of the class to a `Thread` object and call `start`.
+
+```java
+class MyRunnable implements Runnable {
+    public void run() {
+        System.out.println("Thread is running.");
+    }
+    
+    public static void main(String[] args) {
+        MyRunnable myRunnable = new MyRunnable();
+        Thread t1 = new Thread(myRunnable);
+        t1.start();  // Starts the thread
+    }
+}
+```
+
+**States of a Thread:**
+
+1. **New:**
+   - The thread is created but has not yet started.
+   
+2. **Runnable:**
+   - The thread might be running or waiting for CPU time.
+   
+3. **Blocked:**
+   - The thread is blocked when it tries to acquire a lock on an object but another thread already holds the lock.
+   
+4. **Waiting:**
+   - The thread is waiting indefinitely for another thread to perform an action.
+   
+5. **Timed Waiting:**
+   - The thread is waiting for another thread to perform an action or for a specified time to pass.
+   
+6. **Terminated:**
+   - The thread has completed its execution and stopped running.
+
+### Example Explanation:
+
+Let's create a simple example demonstrating a thread that prints numbers from 1 to 5.
+
+**Extending `Thread` class:**
+
+```java
+class NumberThread extends Thread {
+    public void run() {
+        for (int i = 1; i <= 5; i++) {
+            System.out.println(i);
+            try {
+                Thread.sleep(1000);  // Pauses the thread for 1 second
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        NumberThread t1 = new NumberThread();
+        t1.start();
+    }
+}
+```
+
+**Implementing `Runnable` interface:**
+
+```java
+class NumberRunnable implements Runnable {
+    public void run() {
+        for (int i = 1; i <= 5; i++) {
+            System.out.println(i);
+            try {
+                Thread.sleep(1000);  // Pauses the thread for 1 second
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        NumberRunnable myRunnable = new NumberRunnable();
+        Thread t1 = new Thread(myRunnable);
+        t1.start();
+    }
+}
+```
+
+In both examples, the thread will print numbers from 1 to 5, pausing for one second between each number. This illustrates how to create and manage threads in Java.
