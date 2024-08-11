@@ -1,0 +1,5 @@
+What is a Process?
+Independent Program: A process is like an individual program that is running on your computer.
+Own Memory Space: Each process has its own private area in memory. Think of it as having its own room where it keeps all its data and instructions.
+Resources: A process has everything it needs to run, such as CPU time, memory, and file handles.
+Isolation: Processes do not share their room (memory space) or other resources directly with other processes. Each process is isolated, meaning what happens in one process doesn’t directly affect another.
