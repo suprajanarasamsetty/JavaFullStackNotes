@@ -1,0 +1,13 @@
+JDBC (Java Database Connectivity) is a Java API that allows Java applications to interact with databases. It provides a standard way to connect to and work with relational databases using SQL. Here’s a simple explanation of how it helps in writing applications:
+
+1. **Connection**: JDBC provides a way to establish a connection to a database. This involves specifying the database URL, username, and password. Once connected, you can execute SQL commands on the database.
+
+2. **Execution**: With JDBC, you can execute SQL statements (such as queries and updates) using `Statement` or `PreparedStatement` objects. This allows you to perform operations like retrieving data or modifying the database.
+
+3. **Result Handling**: After executing a query, JDBC allows you to process the results. You can retrieve data from the `ResultSet` object and use it in your application.
+
+4. **Error Handling**: JDBC provides mechanisms for handling SQL exceptions, so you can manage errors effectively during database operations.
+
+5. **Resource Management**: JDBC helps in managing resources by closing connections, statements, and result sets when they are no longer needed, preventing resource leaks.
+
+In summary, JDBC acts as a bridge between your Java application and the database, allowing you to perform database operations from within your application using a standard set of methods and classes.
