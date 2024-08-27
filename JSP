@@ -1,0 +1,86 @@
+### What is JSP?
+
+JavaServer Pages (JSP) is a technology that helps you create dynamically generated web pages based on Java. JSP allows you to embed Java code directly into HTML pages, making it easier to build web applications with dynamic content. 
+
+### Key Concepts of JSP
+
+1. **JSP Page**: A file with a `.jsp` extension that contains HTML, JSP tags, and Java code.
+2. **Directives**: Provide global information about an entire JSP file and are defined at the top of the JSP page.
+3. **Declarations**: Define variables and methods that are used in the JSP page.
+4. **Scriptlets**: Pieces of Java code embedded directly within the HTML.
+5. **Expressions**: Output data to the client.
+6. **Tags**: Special commands or tags that control the behavior of the JSP page.
+
+### Real-Time Example: Simple User Profile Page
+
+Let’s say you are developing a web application with a user profile page. You want to display user information dynamically, such as name and email, retrieved from a database.
+
+**1. JSP Page Example**
+
+Create a JSP file named `profile.jsp` to display user profile information.
+
+**profile.jsp:**
+```jsp
+<%@ page import="java.sql.*" %>
+<html>
+<head>
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>User Profile</h1>
+    
+    <% 
+        // Java code to connect to the database and fetch user data
+        String userId = request.getParameter("userId");
+        String jdbcUrl = "jdbc:mysql://localhost:3306/mydatabase";
+        String jdbcUser = "root";
+        String jdbcPassword = "password";
+        
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
+            String sql = "SELECT name, email FROM users WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+    %>
+                <p>Name: <%= name %></p>
+                <p>Email: <%= email %></p>
+    <%
+            } else {
+    %>
+                <p>User not found.</p>
+    <%
+            }
+            conn.close();
+        } catch (Exception e) {
+            out.println("Error: " + e.getMessage());
+        }
+    %>
+</body>
+</html>
+```
+
+**Explanation:**
+- **`<%@ page import="java.sql.*" %>`**: Import the Java SQL classes needed for database operations.
+- **Java Code in Scriptlets**: Connects to the database, fetches user information based on the `userId` parameter, and displays it.
+- **`<%= name %>` and `<%= email %>`**: JSP expressions used to embed Java variables directly into the HTML.
+
+### How it Works
+
+1. **Request Handling**: When a user accesses `profile.jsp`, the server processes the JSP file.
+2. **Database Connection**: Java code within the JSP connects to a MySQL database to retrieve user data based on the `userId` parameter.
+3. **Dynamic Content**: The JSP page generates HTML that includes the user's name and email.
+4. **Response**: The HTML is sent back to the user's browser, displaying the user profile information.
+
+### Summary
+
+- **JSP**: A technology for creating dynamic web pages by embedding Java code in HTML.
+- **Directives, Declarations, Scriptlets, and Expressions**: JSP elements used to control the behavior of the page and generate dynamic content.
+- **Real-Time Example**: A user profile page that retrieves and displays data from a database using JSP.
+
+JSP simplifies the process of generating dynamic web content and integrates seamlessly with Java servlets to build robust web applications.
