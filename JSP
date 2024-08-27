@@ -84,3 +84,6 @@ Create a JSP file named `profile.jsp` to display user profile information.
 - **Real-Time Example**: A user profile page that retrieves and displays data from a database using JSP.
 
 JSP simplifies the process of generating dynamic web content and integrates seamlessly with Java servlets to build robust web applications.
+
+====================================================================================================================================================================================================================
+
