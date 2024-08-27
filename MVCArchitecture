@@ -199,3 +199,144 @@ This setup ensures that your application can handle various user interactions ef
 
 ===========================================================================================================================================================================================================================================
 
+Let's break down the servlet lifecycle with a simple real-time example of an online store:
+
+### Example Scenario
+
+Imagine you have a servlet named `ProductServlet` that handles requests related to product information in your online store. Here's how the servlet lifecycle phases would work for this servlet:
+
+### 1. **init Phase**
+
+**Definition:** The `init` method is called once when the servlet is first loaded into memory. It initializes the servlet and prepares it for handling requests.
+
+**Example:**
+When the server starts up or when the servlet is first accessed, the `ProductServlet` is initialized. In this phase, it might connect to a database or set up necessary resources.
+
+**Code Example:**
+```java
+public class ProductServlet extends HttpServlet {
+    @Override
+    public void init() throws ServletException {
+        // Initialization code here, e.g., connect to a database
+        System.out.println("ProductServlet initialized.");
+    }
+}
+```
+
+### 2. **service Phase**
+
+**Definition:** The `service` method is called to handle each request to the servlet. This is where the main request processing happens.
+
+**Example:**
+When a user requests information about a product by visiting `/product?id=123`, the `service` method is called. This method determines whether the request is a GET, POST, PUT, or DELETE request and delegates the request to the appropriate method (e.g., `doGet`, `doPost`).
+
+**Code Example:**
+```java
+@Override
+protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // Delegate request based on HTTP method
+    String method = request.getMethod();
+    if (method.equalsIgnoreCase("GET")) {
+        doGet(request, response);
+    } else if (method.equalsIgnoreCase("POST")) {
+        doPost(request, response);
+    }
+    // Handle PUT, DELETE if necessary
+}
+```
+
+### 3. **doGet Method**
+
+**Definition:** The `doGet` method handles HTTP GET requests, which are typically used to retrieve data from the server.
+
+**Example:**
+When a user wants to view the details of a product, they might request `/product?id=123`. The `doGet` method processes this request, retrieves the product information from the database, and sends it back to the user.
+
+**Code Example:**
+```java
+@Override
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String productId = request.getParameter("id");
+    // Fetch product details from the database using productId
+    // Send product details in the response
+    response.getWriter().write("Product details for ID: " + productId);
+}
+```
+
+### 4. **doPost Method**
+
+**Definition:** The `doPost` method handles HTTP POST requests, which are typically used to submit data to the server.
+
+**Example:**
+When a user submits a form to add a new product, they might send a POST request to `/addProduct`. The `doPost` method processes this request and updates the database with the new product information.
+
+**Code Example:**
+```java
+@Override
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String productName = request.getParameter("name");
+    String productPrice = request.getParameter("price");
+    // Add the new product to the database
+    response.getWriter().write("Product added: " + productName);
+}
+```
+
+### 5. **doPut Method**
+
+**Definition:** The `doPut` method handles HTTP PUT requests, which are typically used to update existing resources on the server.
+
+**Example:**
+If a user wants to update product information, they might send a PUT request to `/updateProduct`. The `doPut` method updates the existing product details in the database.
+
+**Code Example:**
+```java
+@Override
+protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String productId = request.getParameter("id");
+    String newProductName = request.getParameter("name");
+    // Update the product information in the database
+    response.getWriter().write("Product updated: " + newProductName);
+}
+```
+
+### 6. **doDelete Method**
+
+**Definition:** The `doDelete` method handles HTTP DELETE requests, which are used to delete resources on the server.
+
+**Example:**
+If a user wants to delete a product, they might send a DELETE request to `/deleteProduct?id=123`. The `doDelete` method deletes the product from the database.
+
+**Code Example:**
+```java
+@Override
+protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String productId = request.getParameter("id");
+    // Delete the product from the database
+    response.getWriter().write("Product deleted: " + productId);
+}
+```
+
+### 7. **destroy Phase**
+
+**Definition:** The `destroy` method is called once when the servlet is being unloaded or the server is shutting down. It allows the servlet to clean up resources and perform final tasks.
+
+**Example:**
+Before the server shuts down or the servlet is unloaded, the `destroy` method might close database connections or release other resources.
+
+**Code Example:**
+```java
+@Override
+public void destroy() {
+    // Cleanup code here, e.g., close database connections
+    System.out.println("ProductServlet destroyed.");
+}
+```
+
+### Summary
+
+1. **init:** Set up resources when the servlet is first loaded.
+2. **service:** Handle each request and delegate to `doGet`, `doPost`, etc.
+3. **doGet, doPost, doPut, doDelete:** Handle specific types of requests (retrieve, submit, update, delete).
+4. **destroy:** Clean up resources when the servlet is unloaded.
+
+This lifecycle ensures that your servlet is properly initialized, can handle various types of requests, and can clean up resources when it's no longer needed.
