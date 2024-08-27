@@ -578,3 +578,117 @@ Sessions are essential for web applications that need to maintain user state and
 
 ========================================================================================================================================================================================================================
 
+Let's break down path variables and query parameters with a real-time example to help you understand how they work.
+
+### Path Variables
+
+**Path Variables** are used in RESTful web services and URLs to represent dynamic segments of the URL path. They allow you to pass information directly in the URL, making it part of the URL structure.
+
+#### Real-Time Example: Online Store Product Details
+
+Imagine you have a web application for an online store. You want to view details for a specific product. Instead of using query parameters, you use path variables to make the URL cleaner and more intuitive.
+
+#### URL with Path Variables
+
+**URL Format:**
+```
+/products/{productId}
+```
+
+Here, `{productId}` is a path variable that represents the ID of the product you want to view. For example:
+```
+/products/123
+```
+
+**Servlet Handling Path Variables:**
+
+In a servlet, you would extract the path variable from the URL to get the product ID.
+
+**Code Example:**
+```java
+@WebServlet("/products/*")
+public class ProductServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Extract the path info from the URL
+        String pathInfo = request.getPathInfo();
+        if (pathInfo != null && pathInfo.startsWith("/")) {
+            pathInfo = pathInfo.substring(1); // Remove leading slash
+        }
+        
+        // Extract productId from path info
+        String productId = pathInfo;
+        
+        // Retrieve product details using the productId
+        // (e.g., fetch from a database)
+        
+        response.getWriter().write("Product details for ID: " + productId);
+    }
+}
+```
+
+In this example:
+- The servlet is mapped to handle URLs like `/products/*`.
+- The `request.getPathInfo()` method retrieves the path part after `/products/`, which is the product ID.
+- The `productId` is then used to fetch and display product details.
+
+### Query Parameters
+
+**Query Parameters** are used in URLs to pass additional data to the server. They are included in the query string of the URL, which starts after the `?` character and consists of key-value pairs separated by `&`.
+
+#### Real-Time Example: Product Search
+
+Suppose you want to search for products based on criteria like category or price range. You use query parameters to pass these search criteria in the URL.
+
+#### URL with Query Parameters
+
+**URL Format:**
+```
+/search?category=electronics&price=100-500
+```
+
+Here, `category` and `price` are query parameters with values `electronics` and `100-500`, respectively.
+
+**Servlet Handling Query Parameters:**
+
+In a servlet, you can access query parameters using `request.getParameter()`.
+
+**Code Example:**
+```java
+@WebServlet("/search")
+public class SearchServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Get query parameters
+        String category = request.getParameter("category");
+        String priceRange = request.getParameter("price");
+        
+        // Perform search based on the category and price range
+        // (e.g., query the database and retrieve matching products)
+        
+        response.getWriter().write("Search results for category: " + category + " and price range: " + priceRange);
+    }
+}
+```
+
+In this example:
+- The servlet is mapped to handle URLs like `/search`.
+- `request.getParameter("category")` retrieves the value of the `category` query parameter.
+- `request.getParameter("price")` retrieves the value of the `price` query parameter.
+- The parameters are used to perform a search and generate search results.
+
+### Summary
+
+1. **Path Variables**:
+   - **Purpose**: Represent dynamic segments of the URL path.
+   - **Example**: `/products/123` where `123` is a path variable representing a product ID.
+   - **Usage**: Extracted using `request.getPathInfo()` in servlets.
+
+2. **Query Parameters**:
+   - **Purpose**: Pass additional data in the URL query string.
+   - **Example**: `/search?category=electronics&price=100-500` where `category` and `price` are query parameters.
+   - **Usage**: Accessed using `request.getParameter("name")` in servlets.
+
+Both path variables and query parameters are used to pass information to the server, but they serve different purposes and are used in different contexts to structure and retrieve data.
+
+===============================================================================================================================================================================================================
