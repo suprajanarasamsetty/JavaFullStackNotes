@@ -692,3 +692,115 @@ In this example:
 Both path variables and query parameters are used to pass information to the server, but they serve different purposes and are used in different contexts to structure and retrieve data.
 
 ===============================================================================================================================================================================================================
+
+### Handling Controller Exceptions & Errors in Servlets
+
+Handling exceptions and errors effectively is crucial for maintaining a smooth user experience and ensuring that users receive meaningful feedback when something goes wrong. Here’s how you can manage exceptions and errors in servlets, with real-time examples for clarity.
+
+### Exception Handling in Servlets
+
+**1. Local Exception Handling**
+
+In servlets, you can handle exceptions using standard `try-catch` blocks. This allows you to catch and manage exceptions that occur during request processing.
+
+**Real-Time Example: Product Retrieval**
+
+Suppose you have a servlet that retrieves product details from a database. If there’s an issue with the database connection or the product ID is invalid, an exception might be thrown.
+
+**Code Example:**
+```java
+@WebServlet("/product")
+public class ProductServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            String productId = request.getParameter("id");
+            // Simulate product retrieval from database
+            // Example: Product product = productService.getProductById(productId);
+            // Throwing an exception for demonstration
+            if (productId == null || productId.isEmpty()) {
+                throw new IllegalArgumentException("Product ID cannot be null or empty");
+            }
+            
+            response.getWriter().write("Product details for ID: " + productId);
+        } catch (IllegalArgumentException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Product ID: " + e.getMessage());
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred: " + e.getMessage());
+        }
+    }
+}
+```
+
+In this example:
+- `IllegalArgumentException` is caught and a 400 Bad Request error is sent to the client with a specific message.
+- A generic `Exception` is caught and a 500 Internal Server Error is sent with a general message.
+
+**2. Global Exception Handling**
+
+For a more centralized approach, you can configure global exception handling using the `web.xml` file. This method allows you to specify custom error pages for different types of errors.
+
+**Real-Time Example: Custom Error Pages**
+
+You want to display user-friendly error pages for different HTTP error codes (e.g., 404 Not Found, 500 Internal Server Error).
+
+**web.xml Configuration:**
+```xml
+<web-app>
+    <!-- Define error pages for specific error codes -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error404.jsp</location>
+    </error-page>
+    
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error500.jsp</location>
+    </error-page>
+    
+    <!-- Define error pages for exceptions -->
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/error500.jsp</location>
+    </error-page>
+</web-app>
+```
+
+**Explanation:**
+- **404 Error Page**: If a user tries to access a page that doesn’t exist, they will see `error404.jsp`.
+- **500 Error Page**: For server errors, users will see `error500.jsp`.
+- **Exception Handling**: Any unhandled exception will be redirected to `error500.jsp`.
+
+**Error Page Example (`error404.jsp`):**
+```jsp
+<html>
+<head><title>Page Not Found</title></head>
+<body>
+    <h1>404 - Page Not Found</h1>
+    <p>The page you are looking for does not exist.</p>
+</body>
+</html>
+```
+
+**Error Page Example (`error500.jsp`):**
+```jsp
+<html>
+<head><title>Server Error</title></head>
+<body>
+    <h1>500 - Internal Server Error</h1>
+    <p>Something went wrong on our end. Please try again later.</p>
+</body>
+</html>
+```
+
+### Summary
+
+1. **Local Exception Handling**:
+   - Use `try-catch` blocks in servlets to handle exceptions locally.
+   - Provide meaningful error messages and appropriate HTTP status codes.
+
+2. **Global Exception Handling**:
+   - Configure error pages in `web.xml` to handle specific HTTP error codes and exceptions.
+   - Define custom error pages to provide user-friendly error messages for different scenarios.
+
+By effectively managing exceptions and errors, you ensure a better user experience and make your web application more robust and reliable.
