@@ -195,6 +195,465 @@ public class User implements Serializable {
 A JavaBean is a simple, standard way to encapsulate data in Java. By following the rules (private properties, no-arg constructor, getters, and setters), you create a class that is easy to use, manage, and transfer across different layers of an application.
 
 ======================================================================================================================================================================================================================================================
+Directives in JSP are special elements that provide instructions to the JSP container about how to handle the JSP page during the compilation process. These directives can control various aspects like language, imports, error handling, and more.
+
+There are three main types of directives in JSP:
+
+1. **Page Directive (`@page`)**: 
+   - It’s used to define attributes that apply to the entire JSP page, like the language of the scriptlet, which classes to import, or how to handle errors.
+   - **Example**: If you want to import a Java class so that you can use it in your JSP, you’d use the `@page` directive.
+
+   ```jsp
+   <%@ page import="java.util.Date" %>
+   ```
+
+   In this example, the `Date` class from `java.util` is imported, allowing you to use it throughout the page.
+
+2. **Include Directive (`@include`)**:
+   - This directive is used to include the content of another file during the translation phase (before the JSP is compiled into a servlet). It’s like copying and pasting the content of the file into the JSP.
+   - **Example**: If you have a header file that you want to include in multiple pages, you’d use the `@include` directive.
+
+   ```jsp
+   <%@ include file="header.jsp" %>
+   ```
+
+   In this example, whatever is in `header.jsp` will be included in the page at the time of compilation.
+
+3. **Taglib Directive (`@taglib`)**:
+   - This directive is used to define custom tags that can be used in the JSP page. Custom tags are often used to encapsulate complex logic or repetitive tasks.
+   - **Example**: If you have a custom tag library for formatting dates, you’d use the `@taglib` directive to include it.
+
+   ```jsp
+   <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+   ```
+
+   In this example, the `fmt` prefix is used to refer to tags in the JavaServer Pages Standard Tag Library (JSTL) formatting library.
+
+### Real-Time Example:
+Imagine you are creating a web page that shows the current date and time, includes a standard header, and uses a custom tag for formatting the date.
+
+Here’s how you’d use the directives:
+
+```jsp
+<%@ page import="java.util.Date" %>
+<%@ include file="header.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<html>
+<head>
+    <title>Current Date and Time</title>
+</head>
+<body>
+    <h2>Welcome to My Website</h2>
+    <p>The current date and time is:</p>
+    <fmt:formatDate value="<%= new Date() %>" pattern="dd MMM yyyy HH:mm:ss" />
+</body>
+</html>
+```
+
+- The `@page` directive imports the `Date` class so that you can create a new `Date` object.
+- The `@include` directive brings in the header content from `header.jsp`.
+- The `@taglib` directive lets you use the `fmt:formatDate` tag to format the date in a specific pattern.
+
+This way, you keep your code clean, modular, and easy to maintain.
+
+Here’s a continuation with explanations of each attribute for the directives in JSP:
+
+### `@page` Directive Attributes:
+1. **`language`**: 
+   - Specifies the scripting language used in the page. The default is `"java"`.
+   - **Example**:
+     ```jsp
+     <%@ page language="java" %>
+     ```
+   
+2. **`extends`**:
+   - Defines a superclass that the generated servlet extends. This is rarely used because JSPs usually extend `HttpServlet`.
+   - **Example**:
+     ```jsp
+     <%@ page extends="com.example.MyServlet" %>
+     ```
+
+3. **`import`**:
+   - Allows you to import Java classes or entire packages so that you can use them in your JSP page.
+   - **Example**:
+     ```jsp
+     <%@ page import="java.util.Date, java.text.SimpleDateFormat" %>
+     ```
+
+4. **`session`**:
+   - Determines whether the JSP page participates in an HTTP session. The default is `true`.
+   - **Example**:
+     ```jsp
+     <%@ page session="false" %>
+     ```
+
+5. **`autoFlush`**:
+   - Controls whether the output buffer is automatically flushed when it is full. The default is `true`.
+   - **Example**:
+     ```jsp
+     <%@ page autoFlush="true" %>
+     ```
+
+6. **`contentType`**:
+   - Specifies the MIME type and character encoding of the response. The default is `"text/html; charset=ISO-8859-1"`.
+   - **Example**:
+     ```jsp
+     <%@ page contentType="text/html; charset=UTF-8" %>
+     ```
+
+7. **`errorPage`**:
+   - Defines a JSP page to handle exceptions thrown on the current page.
+   - **Example**:
+     ```jsp
+     <%@ page errorPage="error.jsp" %>
+     ```
+
+8. **`isErrorPage`**:
+   - Indicates whether the current page is an error page. The default is `false`.
+   - **Example**:
+     ```jsp
+     <%@ page isErrorPage="true" %>
+     ```
+
+9. **`info`**:
+   - Provides a description of the JSP page. This can be retrieved using `getServletInfo()` method.
+   - **Example**:
+     ```jsp
+     <%@ page info="This is a sample JSP page" %>
+     ```
+
+10. **`isELIgnored`**:
+    - Determines whether Expression Language (EL) is ignored on the page. The default is `false` (EL is enabled).
+    - **Example**:
+      ```jsp
+      <%@ page isELIgnored="true" %>
+      ```
+
+11. **`isThreadSafe`**:
+    - Specifies whether the JSP page is thread-safe. The default is `true`. If set to `false`, the `singleThreadModel` interface is implemented, which is not recommended due to performance issues.
+    - **Example**:
+      ```jsp
+      <%@ page isThreadSafe="false" %>
+      ```
+
+### `@include` Directive:
+- The `@include` directive is used to include the content of another JSP file during the translation phase (before the JSP is compiled into a servlet). It’s similar to copying and pasting the included file's content into the current file.
+- **Example**:
+  ```jsp
+  <%@ include file="header.jsp" %>
+  ```
+
+### `@taglib` Directive:
+- The `@taglib` directive is used to include and define custom tags or tag libraries in the JSP page. It allows the use of custom tags defined in a tag library, typically for repetitive tasks or encapsulating complex logic.
+- **Attributes**:
+  - **`uri`**: Specifies the Uniform Resource Identifier (URI) that uniquely identifies the tag library.
+  - **`prefix`**: Defines a prefix that is used to reference the tags in the JSP page.
+
+- **Example**:
+  ```jsp
+  <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+  ```
+
+This example includes the JSTL core library and assigns the prefix `c`, so you can use tags like `<c:forEach>` in your JSP.
+
+### Summary
+- **`@page`**: Controls page-wide attributes like language, imports, session management, and error handling.
+- **`@include`**: Includes the content of another JSP during the translation phase.
+- **`@taglib`**: Enables the use of external custom tags in the JSP.
+
+These directives help you manage how your JSP behaves, includes content, and uses custom functionality.
+
+===========================================================================================================================================================================================================================================================
+
+Scriptlets in JSP are used to insert Java code directly into your HTML page. Any Java code you write inside a scriptlet is executed by the JSP engine when the page is requested. This code is added to the `service` method of the generated servlet.
+
+### Scriptlet Syntax:
+Scriptlets are written between `<%` and `%>` tags.
+
+```jsp
+<%
+    // Java code goes here
+%>
+```
+
+### Example Explanation:
+Let’s consider a simple example to understand how scriptlets work.
+
+### Real-Time Example:
+Imagine you want to display a welcome message along with a dynamic number on a webpage.
+
+```jsp
+<html>
+<head>
+    <title>Welcome Page</title>
+</head>
+<body>
+    <h1>Welcome to My Website!</h1>
+
+    <% 
+        // Java code in scriptlet
+        int visitCount = 5;  // This is a dynamic number
+        visitCount++;  // Increment the visit count
+    %>
+
+    <p>You are visitor number: <%= visitCount %></p>
+</body>
+</html>
+```
+
+### Explanation:
+1. **Scriptlet Section**:
+   - The scriptlet `<% int visitCount = 5; visitCount++; %>` contains Java code.
+   - This code creates a variable `visitCount` and initializes it to 5, then increments it by 1.
+
+2. **Dynamic Content Display**:
+   - The value of `visitCount` is then displayed on the webpage using an expression `<%= visitCount %>`. This is another JSP feature where you can output the value of a variable directly into the HTML.
+
+### What Happens Behind the Scenes:
+- When a user visits this page, the JSP engine processes the Java code inside the scriptlet.
+- The `visitCount` variable is calculated, and its updated value is inserted into the HTML, so the user sees "You are visitor number: 6".
+
+### Summary:
+- **Scriptlets** allow you to embed Java code directly in a JSP page.
+- The Java code inside scriptlets is executed when the JSP page is requested.
+- Use scriptlets to perform simple dynamic operations like calculations, logic, or variable manipulation right within your HTML.
+
+While scriptlets are powerful, they are considered outdated in modern JSP development. It's better to use JSP expressions, JSTL (JavaServer Pages Standard Tag Library), or JavaBeans for cleaner and more maintainable code.
+==============================================================================================================================================================================================================================================================================
+
+**Declarations** in JSP are used to declare variables and methods that are inserted into the servlet class outside the `service` method. This means that these variables and methods are available to all parts of the JSP page, unlike scriptlets, which are limited to the `service` method.
+
+### Declaration Syntax:
+Declarations are written between `<%!` and `%>` tags.
+
+```jsp
+<%!
+    // Variable and method declarations go here
+%>
+```
+
+### Example Explanation:
+Let’s look at a simple example to understand how declarations work.
+
+### Real-Time Example:
+
+Suppose you're creating a webpage that collects user feedback through a form. You want to keep track of how many times the form has been submitted and print a message to the server log whenever a submission occurs.
+
+#### JSP Code:
+```jsp
+<%@ page language="java" %>
+<%!
+    // Declaration of a variable
+    int submissionCount = 0;
+
+    // Declaration of a method
+    void logSubmission() {
+        submissionCount++;
+        System.out.println("Form submitted " + submissionCount + " times.");
+    }
+%>
+
+<html>
+<head>
+    <title>User Feedback</title>
+</head>
+<body>
+    <h1>Please Provide Your Feedback</h1>
+    
+    <form action="feedback.jsp" method="post">
+        Name: <input type="text" name="name"><br>
+        Comments: <textarea name="comments"></textarea><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <%
+        // Calling the declared method when the form is submitted
+        if (request.getMethod().equalsIgnoreCase("post")) {
+            logSubmission();
+    %>
+            <p>Thank you for your feedback!</p>
+    <%
+        }
+    %>
+</body>
+</html>
+```
+
+### Explanation:
+1. **Declaration Section**:
+   - The code inside `<%!` and `%>` is a declaration. Here, an integer variable `submissionCount` is declared and initialized to 0.
+   - A method `logSubmission()` is also declared, which increments the `submissionCount` by 1 each time it's called and prints a message to the server log.
+
+2. **Form Submission Handling**:
+   - The form collects the user's name and comments.
+   - When the form is submitted (`POST` request), the `logSubmission()` method is called, increasing the `submissionCount` and logging the submission.
+
+3. **Output**:
+   - The first time the form is submitted, "Form submitted 1 times." will be logged in the server.
+   - The second submission logs "Form submitted 2 times.", and so on.
+
+### Composing HTML Documents:
+- In this example, the JSP page composes an HTML document by embedding form elements (`<input>`, `<textarea>`, etc.) within the JSP.
+- The page dynamically responds to form submissions by displaying a thank you message and logging the event.
+
+### Storing Form Data:
+- The form data (name and comments) is sent to the server via the `POST` method.
+- While this example logs the number of submissions, you could extend it to store the actual form data in a database or display it back on the page.
+
+### Summary:
+- **Declarations** in JSP allow you to define variables and methods that exist outside the `service` method, making them accessible throughout the JSP page.
+- They are useful for keeping track of state (like the number of submissions) or defining helper methods that can be used multiple times in the page.
+- This approach is useful for composing dynamic HTML documents and handling form data efficiently.
+
+==============================================================================================================================================================================================================
+
+**Expressions** in JSP are used to output values directly to the response stream. They are a quick and easy way to display the result of a Java expression directly on the webpage. The code inside an expression is evaluated, and the result is converted to a string and inserted into the HTML at the point where the expression appears.
+
+### Expression Syntax:
+Expressions are written between `<%=` and `%>` tags.
+
+```jsp
+<%= expression %>
+```
+
+### Real-Time Example:
+
+Suppose you're creating a webpage that greets the user based on the current time of day.
+
+#### JSP Code:
+```jsp
+<html>
+<head>
+    <title>Greeting Page</title>
+</head>
+<body>
+    <h1>Welcome to Our Website!</h1>
+    
+    <p>
+        <%
+            // Java code to determine the current hour
+            java.util.Date date = new java.util.Date();
+            int hour = date.getHours();
+            String greeting;
+            
+            // Determine the greeting based on the time of day
+            if (hour < 12) {
+                greeting = "Good Morning!";
+            } else if (hour < 18) {
+                greeting = "Good Afternoon!";
+            } else {
+                greeting = "Good Evening!";
+            }
+        %>
+
+        <!-- Using JSP Expression to output the greeting -->
+        <%= greeting %>
+    </p>
+</body>
+</html>
+```
+
+### Explanation:
+1. **Java Code for Time Calculation**:
+   - The current time is retrieved using `java.util.Date`.
+   - The hour is extracted, and a greeting message is determined based on the time of day (morning, afternoon, or evening).
+
+2. **Using JSP Expression**:
+   - The expression `<%= greeting %>` is used to output the `greeting` variable directly into the HTML.
+   - When the JSP page is rendered, the expression is evaluated, and the greeting is inserted into the webpage.
+
+3. **Output**:
+   - If a user visits the page in the morning, they will see "Good Morning!" displayed.
+   - If they visit in the afternoon, "Good Afternoon!" is shown.
+   - In the evening, "Good Evening!" is displayed.
+
+### Summary:
+- **Expressions** in JSP are a simple and efficient way to display dynamic content on a webpage.
+- The code inside an expression is evaluated and its result is sent directly to the output stream, which means it’s rendered as part of the HTML page.
+- This is particularly useful for displaying the results of calculations, variable values, or any dynamic data that you want to show to the user.
+
+====================================================================================================================================================================================================================================
+
+**Implicit objects** in JSP are built-in objects that are automatically available in any JSP page without needing to declare or initialize them. They provide easy access to various parts of the request and response lifecycle, and they simplify common tasks in web development.
+
+### Key Implicit Objects:
+1. **Request**: Represents the HTTP request sent by the client to the server.
+2. **Response**: Represents the HTTP response that the server sends back to the client.
+3. **Out**: Used to send content to the client. It’s an instance of `JspWriter`, which is a buffered writer for outputting content to the client.
+
+### Real-Time Example:
+Let’s create a simple example where we use these implicit objects to handle user input and generate a response.
+
+#### Scenario:
+You have a webpage with a form where users can input their name. When they submit the form, the server responds with a personalized greeting using the name they entered.
+
+#### JSP Code:
+**index.jsp** (The Form Page):
+```jsp
+<html>
+<head>
+    <title>Enter Your Name</title>
+</head>
+<body>
+    <h1>Welcome!</h1>
+    <form action="greeting.jsp" method="post">
+        Enter your name: <input type="text" name="username">
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+```
+
+**greeting.jsp** (The Response Page):
+```jsp
+<html>
+<head>
+    <title>Greeting</title>
+</head>
+<body>
+    <h1>Your Personalized Greeting</h1>
+    
+    <%
+        // Using the Request object to retrieve the 'username' parameter
+        String name = request.getParameter("username");
+        
+        // Check if the name is provided
+        if (name == null || name.trim().isEmpty()) {
+            name = "Guest";
+        }
+        
+        // Generate a personalized greeting using the Response and Out objects
+        response.setContentType("text/html");
+        out.println("Hello, " + name + "! Welcome to our website.");
+    %>
+</body>
+</html>
+```
+
+### Explanation:
+
+1. **Request Object**:
+   - In `greeting.jsp`, the `request` object is used to retrieve the value entered in the form (`username`).
+   - The method `request.getParameter("username")` fetches the value of the input field with the name `username`.
+
+2. **Response Object**:
+   - The `response` object is used to set the content type of the response (`text/html`). This ensures the server sends the correct content type back to the client.
+
+3. **Out Object**:
+   - The `out` object is an instance of `JspWriter` and is used to send content back to the client. Here, it’s used to print the personalized greeting directly into the HTML response.
+
+### Output:
+- When a user enters their name, e.g., "John," and submits the form, `greeting.jsp` will respond with "Hello, John! Welcome to our website."
+- If no name is entered, it defaults to "Hello, Guest! Welcome to our website."
+
+### Summary:
+- **Request**: Used to access data sent by the client, such as form inputs.
+- **Response**: Used to control the response sent back to the client, like setting the content type or headers.
+- **Out**: Used to send output directly to the client, such as HTML content or text.
+
+These implicit objects make it easier to develop dynamic web pages by providing direct access to the request, response, and output mechanisms in JSP.
+===================================================================================================================================================================================================================================================================
 
 The lifecycle of a JavaServer Page (JSP) is a process that describes how a JSP file is managed by the server to handle client requests. It involves several steps, from translating the JSP into a servlet to eventually handling requests and responses. Let's break down the JSP lifecycle with a simple, real-time example.
 
