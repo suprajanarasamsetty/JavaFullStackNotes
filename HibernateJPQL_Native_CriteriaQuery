@@ -1,0 +1,162 @@
+### Java Persistence Query Language (JPQL), Native Queries, and Criteria API
+
+#### 1. Java Persistence Query Language (JPQL)
+
+**JPQL Overview**:
+- **JPQL** is a query language defined by the Java Persistence API (JPA) specification. It is used to query data from a database using Java objects (entities) rather than raw SQL.
+- **Similar to HQL**: It operates similarly to Hibernate Query Language (HQL), focusing on entities and their relationships rather than database tables and columns.
+
+**Key Features**:
+- **Object-Oriented Queries**: Queries are written in terms of entities and their attributes.
+- **Database Agnostic**: It abstracts the underlying database and is not tied to a specific SQL dialect.
+- **Supports Entity Relationships**: Can handle complex entity relationships and joins.
+
+**JPQL Syntax Examples**:
+
+1. **Basic Query**:
+   ```java
+   String jpql = "SELECT e FROM Employee e";
+   TypedQuery<Employee> query = entityManager.createQuery(jpql, Employee.class);
+   List<Employee> employees = query.getResultList();
+   ```
+
+2. **Query with Conditions**:
+   ```java
+   String jpql = "SELECT e FROM Employee e WHERE e.salary > :minSalary";
+   TypedQuery<Employee> query = entityManager.createQuery(jpql, Employee.class);
+   query.setParameter("minSalary", 50000);
+   List<Employee> employees = query.getResultList();
+   ```
+
+3. **Query with Join**:
+   ```java
+   String jpql = "SELECT e FROM Employee e JOIN e.department d WHERE d.name = :deptName";
+   TypedQuery<Employee> query = entityManager.createQuery(jpql, Employee.class);
+   query.setParameter("deptName", "HR");
+   List<Employee> employees = query.getResultList();
+   ```
+
+**Real-World Scenario**:
+- **Customer Management System**: Fetch a list of all customers who have made more than five purchases.
+  ```java
+  String jpql = "SELECT c FROM Customer c WHERE c.purchases.size > 5";
+  TypedQuery<Customer> query = entityManager.createQuery(jpql, Customer.class);
+  List<Customer> customers = query.getResultList();
+  ```
+
+#### 2. Native Queries
+
+**Native Queries Overview**:
+- **Native Queries** allow you to execute raw SQL directly against the database. This is useful for complex queries or database-specific operations that cannot be easily expressed in JPQL.
+- **Bypassing JPA Abstraction**: Native queries bypass the JPA abstraction and directly interact with the database.
+
+**Key Features**:
+- **Database-Specific Features**: Access specific database functions or optimizations not available in JPQL.
+- **Complex Queries**: Execute complex SQL queries that are cumbersome to express with JPQL or Criteria API.
+
+**Native Query Syntax Example**:
+
+1. **Basic Native Query**:
+   ```java
+   String sql = "SELECT * FROM employee WHERE salary > ?";
+   Query query = entityManager.createNativeQuery(sql, Employee.class);
+   query.setParameter(1, 50000);
+   List<Employee> employees = query.getResultList();
+   ```
+
+2. **Native Query with Result Set Mapping**:
+   ```java
+   @SqlResultSetMapping(
+       name = "employeeMapping",
+       entities = @EntityResult(entityClass = Employee.class)
+   )
+   @NamedNativeQuery(
+       name = "findHighSalaryEmployees",
+       query = "SELECT * FROM employee WHERE salary > :minSalary",
+       resultSetMapping = "employeeMapping"
+   )
+   ```
+
+**Real-World Scenario**:
+- **Sales Report**: Retrieve a detailed sales report using a complex SQL query that joins multiple tables and uses database-specific functions.
+  ```java
+  String sql = "SELECT s.product_id, SUM(s.amount) AS total_sales FROM sales s WHERE s.date BETWEEN ?1 AND ?2 GROUP BY s.product_id";
+  Query query = entityManager.createNativeQuery(sql);
+  query.setParameter(1, startDate);
+  query.setParameter(2, endDate);
+  List<Object[]> results = query.getResultList();
+  ```
+
+#### 3. Criteria API
+
+**Criteria API Overview**:
+- **Criteria API** is a programmatic way to build and execute queries. It allows for dynamic query creation where the query structure is constructed at runtime.
+- **Type-Safe**: It provides a type-safe way to build queries, reducing errors related to query construction.
+
+**Key Features**:
+- **Dynamic Queries**: Build queries dynamically based on conditions known only at runtime.
+- **Type-Safe**: Queries are built using Java's type system, which helps avoid errors due to incorrect field names or types.
+
+**Criteria API Syntax Examples**:
+
+1. **Basic Query**:
+   ```java
+   CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+   CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+   Root<Employee> employee = query.from(Employee.class);
+   query.select(employee);
+   TypedQuery<Employee> typedQuery = entityManager.createQuery(query);
+   List<Employee> employees = typedQuery.getResultList();
+   ```
+
+2. **Query with Conditions**:
+   ```java
+   CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+   CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+   Root<Employee> employee = query.from(Employee.class);
+   query.select(employee).where(cb.greaterThan(employee.get("salary"), 50000));
+   TypedQuery<Employee> typedQuery = entityManager.createQuery(query);
+   List<Employee> employees = typedQuery.getResultList();
+   ```
+
+3. **Query with Join**:
+   ```java
+   CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+   CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+   Root<Employee> employee = query.from(Employee.class);
+   Join<Employee, Department> department = employee.join("department");
+   query.select(employee).where(cb.equal(department.get("name"), "HR"));
+   TypedQuery<Employee> typedQuery = entityManager.createQuery(query);
+   List<Employee> employees = typedQuery.getResultList();
+   ```
+
+**Real-World Scenario**:
+- **Dynamic Search**: Build a dynamic search query for a product catalog where search criteria (e.g., price range, category) are specified by the user at runtime.
+  ```java
+  CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+  CriteriaQuery<Product> query = cb.createQuery(Product.class);
+  Root<Product> product = query.from(Product.class);
+  
+  List<Predicate> predicates = new ArrayList<>();
+  if (minPrice != null) {
+      predicates.add(cb.greaterThanOrEqualTo(product.get("price"), minPrice));
+  }
+  if (maxPrice != null) {
+      predicates.add(cb.lessThanOrEqualTo(product.get("price"), maxPrice));
+  }
+  if (category != null) {
+      predicates.add(cb.equal(product.get("category"), category));
+  }
+  
+  query.select(product).where(cb.and(predicates.toArray(new Predicate[0])));
+  TypedQuery<Product> typedQuery = entityManager.createQuery(query);
+  List<Product> products = typedQuery.getResultList();
+  ```
+
+### Summary
+
+- **JPQL**: Object-oriented query language for interacting with entities, providing a database-agnostic way to query data.
+- **Native Queries**: Execute raw SQL directly, useful for complex queries and database-specific features.
+- **Criteria API**: Programmatic and type-safe way to build dynamic queries, especially useful when query criteria are not known until runtime.
+
+Each of these querying mechanisms offers distinct advantages depending on the use case and requirements of your application.
