@@ -1,0 +1,114 @@
+### HTTP Method Annotations in Spring Boot
+
+In Spring Boot, HTTP Method Annotations like `@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping`, and `@PatchMapping` are used in controllers to map specific HTTP requests to handler methods. These annotations make it easier to create RESTful web services by directly associating a URL path and an HTTP method with a particular function in your controller.
+
+### Detailed Explanation
+
+1. **@GetMapping**
+   - **Purpose**: Maps HTTP GET requests to a specific handler method. Typically used for fetching data from the server.
+   - **Example**: Retrieving a list of users or fetching details of a single user.
+   - **Scenario**: Imagine you have a web application for managing products in a store. You want to fetch all available products. You can use `@GetMapping` to handle this request.
+   - **Usage**:
+     ```java
+     @RestController
+     @RequestMapping("/products")
+     public class ProductController {
+         
+         @GetMapping // Maps to "/products"
+         public List<Product> getAllProducts() {
+             // Code to fetch and return all products
+             return productService.getAllProducts();
+         }
+
+         @GetMapping("/{id}") // Maps to "/products/{id}"
+         public Product getProductById(@PathVariable Long id) {
+             // Code to fetch and return product by id
+             return productService.getProductById(id);
+         }
+     }
+     ```
+   - **Real-World Use Case**: Fetching all the products in an online store or retrieving details of a specific product by its ID.
+
+2. **@PostMapping**
+   - **Purpose**: Maps HTTP POST requests to a specific handler method. Commonly used for creating new resources on the server.
+   - **Example**: Creating a new user account or adding a new product.
+   - **Scenario**: You want to add a new product to the store. You can use `@PostMapping` to handle the creation of new products.
+   - **Usage**:
+     ```java
+     @RestController
+     @RequestMapping("/products")
+     public class ProductController {
+
+         @PostMapping // Maps to "/products"
+         public Product addProduct(@RequestBody Product product) {
+             // Code to save the product
+             return productService.saveProduct(product);
+         }
+     }
+     ```
+   - **Real-World Use Case**: Adding a new product to an inventory or creating a new customer profile.
+
+3. **@PutMapping**
+   - **Purpose**: Maps HTTP PUT requests to a handler method. Used to update existing resources completely.
+   - **Example**: Updating an existing user's information or modifying a product’s details.
+   - **Scenario**: If you want to update the price or description of a product, you use `@PutMapping`.
+   - **Usage**:
+     ```java
+     @RestController
+     @RequestMapping("/products")
+     public class ProductController {
+
+         @PutMapping("/{id}") // Maps to "/products/{id}"
+         public Product updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
+             // Code to update the product details
+             return productService.updateProduct(id, updatedProduct);
+         }
+     }
+     ```
+   - **Real-World Use Case**: Changing the price of a product in an e-commerce application.
+
+4. **@DeleteMapping**
+   - **Purpose**: Maps HTTP DELETE requests to a handler method. Typically used for deleting resources from the server.
+   - **Example**: Deleting a user account or removing a product from the inventory.
+   - **Scenario**: You want to remove a discontinued product from the catalog; use `@DeleteMapping`.
+   - **Usage**:
+     ```java
+     @RestController
+     @RequestMapping("/products")
+     public class ProductController {
+
+         @DeleteMapping("/{id}") // Maps to "/products/{id}"
+         public void deleteProduct(@PathVariable Long id) {
+             // Code to delete the product by id
+             productService.deleteProduct(id);
+         }
+     }
+     ```
+   - **Real-World Use Case**: Removing an obsolete item from an inventory system.
+
+5. **@PatchMapping**
+   - **Purpose**: Maps HTTP PATCH requests to a handler method. Used for partial updates of a resource.
+   - **Example**: Updating a specific field of a user's profile, like changing the email address.
+   - **Scenario**: If you only need to update the stock quantity of a product without modifying other fields, you can use `@PatchMapping`.
+   - **Usage**:
+     ```java
+     @RestController
+     @RequestMapping("/products")
+     public class ProductController {
+
+         @PatchMapping("/{id}") // Maps to "/products/{id}"
+         public Product updateProductPrice(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+             // Code to partially update the product
+             return productService.partialUpdateProduct(id, updates);
+         }
+     }
+     ```
+   - **Real-World Use Case**: Updating only the status of an order in a tracking system.
+
+### Summary
+
+- These annotations (`@GetMapping`, `@PostMapping`, etc.) simplify defining RESTful endpoints in Spring Boot.
+- They make the code more readable, maintainable, and aligned with standard HTTP operations.
+- Using these annotations helps create a clean, easy-to-understand interface for your API, aligning with REST principles.
+
+**Real-time scenarios** involve building applications like e-commerce sites, social media platforms, inventory management systems, etc., where these annotations help manage data flow between clients and servers efficiently.
