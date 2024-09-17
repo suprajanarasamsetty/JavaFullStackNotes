@@ -1,0 +1,35 @@
+### Simple Explanation of Distributed Tracing
+
+Think of distributed tracing like following a trail of breadcrumbs to understand how a package (or in this case, a request) travels through a series of checkpoints (or services) to reach its destination. 
+
+#### Real-Time Scenario: Ordering a Pizza
+
+Imagine you order a pizza online from a restaurant that uses multiple systems to handle your order:
+
+1. **You Place an Order**: You go to the pizza restaurant’s website and place an order. This triggers the process.
+
+2. **Order Confirmation**: The website's ordering system sends your order details to the kitchen.
+
+3. **Payment Processing**: The kitchen system sends the order to a payment system to process your payment.
+
+4. **Notification**: Once the payment is approved, the system sends you a confirmation email about your order.
+
+Here’s how distributed tracing helps in this scenario:
+
+1. **Start of the Trace**: When you place the order, a trace is started. This trace records the journey of your order from start to finish.
+
+2. **Service Checks**: Each system involved in your order (ordering system, payment system, notification system) creates its own "span," which is like a note that records how long each system takes to handle your part of the order.
+
+3. **Combine the Spans**: All these notes (spans) are put together to form a complete picture of your order’s journey. This helps in understanding how long each part of the process took and where any delays happened.
+
+#### Example in Practice
+
+Let’s say there’s a delay in your order confirmation. With distributed tracing, the restaurant’s tech team can:
+
+1. **Follow the Trail**: Check the trace to see each system's handling time (e.g., the payment system took too long).
+
+2. **Identify Problems**: Quickly pinpoint that the issue was with the payment processing system and fix it.
+
+3. **Improve Performance**: Understand where improvements can be made, like speeding up payment processing.
+
+Distributed tracing makes it easier to track and solve problems by showing the complete path of your order through all systems involved.
