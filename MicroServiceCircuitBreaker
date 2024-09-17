@@ -1,0 +1,114 @@
+The **Circuit Breaker Pattern** is a way to prevent a failure in one part of your application from affecting the entire system. It’s especially useful in **microservices**, where multiple services depend on each other. 
+
+### Simple Explanation:
+
+Imagine you have two services in a shopping app:
+1. **Bookstore Service** - Provides a list of recommended books.
+2. **Reading Service** - Calls the Bookstore service to show the list to users.
+
+If the **Bookstore Service** becomes slow or stops working, it can cause the **Reading Service** to wait endlessly, leading to more issues. A **circuit breaker** prevents this from happening by "breaking" the connection when it detects too many failures.
+
+The circuit breaker has **3 states**:
+1. **Closed**: Everything works fine, requests are forwarded as usual.
+2. **Open**: Too many failures happened, so the circuit is broken. No more requests are sent, and users get an error or fallback response.
+3. **Half-Open**: After some time, the circuit breaker tries to make requests again to check if the service is back.
+
+### Real-World Example:
+Think of a **restaurant** that regularly orders supplies from a distributor. If the distributor is slow to deliver or out of stock, the restaurant can't keep waiting for every order to fail. They need a backup plan, like buying from another supplier. The circuit breaker acts like the manager who decides to stop ordering from the failing distributor and switches to the backup supplier until the original one is reliable again.
+
+### Code Example with a Circuit Breaker
+
+In a **Spring Boot** application using **Netflix Hystrix**, this is how the circuit breaker works:
+
+1. **Bookstore Service**: Provides the book list.
+   
+   ```java
+   @RestController
+   @SpringBootApplication
+   public class BookstoreApplication {
+   
+       @RequestMapping(value = "/recommended")
+       public String readingList() {
+           return "Spring in Action (Manning), Cloud Native Java (O'Reilly), Learning Spring Boot (Packt)";
+       }
+   
+       public static void main(String[] args) {
+           SpringApplication.run(BookstoreApplication.class, args);
+       }
+   }
+   ```
+   This service runs on **port 8090**.
+
+2. **Reading Service**: Calls the Bookstore service to get the list of books.
+   
+   ```java
+   @EnableHystrix
+   @RestController
+   @SpringBootApplication
+   public class ReadingApplication {
+   
+       @Autowired
+       private BookService bookService;
+   
+       @Bean
+       public RestTemplate rest(RestTemplateBuilder builder) {
+           return builder.build();
+       }
+   
+       @RequestMapping("/to-read")
+       public String toRead() {
+           return bookService.readingList();
+       }
+   
+       public static void main(String[] args) {
+           SpringApplication.run(ReadingApplication.class, args);
+       }
+   }
+   ```
+
+3. **BookService**: Calls the Bookstore service. If the Bookstore service is down, the circuit breaker (Hystrix) provides a fallback.
+
+   ```java
+   @Service
+   public class BookService {
+   
+       private final RestTemplate restTemplate;
+   
+       public BookService(RestTemplate rest) {
+           this.restTemplate = rest;
+       }
+   
+       // This method calls the Bookstore service
+       @HystrixCommand(fallbackMethod = "reliable")
+       public String readingList() {
+           URI uri = URI.create("http://localhost:8090/recommended");
+           return this.restTemplate.getForObject(uri, String.class);
+       }
+   
+       // This method returns the fallback list if the Bookstore service is down
+       public String reliable() {
+           return "Cloud Native Java (O'Reilly)";
+       }
+   }
+   ```
+
+### How It Works:
+
+1. When you visit `localhost:8080/to-read`, the **Reading Service** calls the **Bookstore Service** to get a list of recommended books.
+2. If the **Bookstore Service** is running, you’ll see a full list of books.
+   
+   ```
+   Spring in Action (Manning), Cloud Native Java (O'Reilly), Learning Spring Boot (Packt)
+   ```
+3. If the **Bookstore Service** is down (you stop the service), the circuit breaker will kick in, and instead of failing, it will return a fallback list:
+   
+   ```
+   Cloud Native Java (O'Reilly)
+   ```
+
+### Real-Life Example:
+Think of a movie streaming app like **Netflix**:
+- **Movie Service** provides a list of movies.
+- **Recommendation Service** shows the recommended movies to users.
+
+If the **Movie Service** is down, the **Recommendation Service** can either show a fallback list (like popular movies) or display a message saying "Please try again later" instead of crashing the entire app. This ensures a smooth experience for users even when part of the system fails.
