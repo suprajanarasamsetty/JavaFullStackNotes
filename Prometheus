@@ -1,0 +1,46 @@
+**Prometheus** is used in your project for **monitoring** the performance, health, and behavior of your microservices. It works in conjunction with **Micrometer** to collect and expose various metrics (e.g., how many orders are processed, service latency, error rates) in a format that **Prometheus** can scrape and analyze.
+
+### **How Prometheus Works in Your Project**:
+
+1. **Micrometer with Prometheus**:
+   - **Micrometer** acts as a metrics collection library for your Spring Boot application. It gathers data about your microservices (like `OrderService`) and exposes it in a format that **Prometheus** can read.
+   - **Prometheus** is a monitoring system that scrapes (pulls) metrics from your services and stores them in a time-series database for analysis.
+
+2. **Metrics Export**:
+   - You define **custom metrics** in your application, such as the **number of orders processed**, **request duration**, or **error rates**.
+   - These metrics are then **exposed** through an HTTP endpoint (e.g., `/actuator/prometheus`), and **Prometheus** scrapes this endpoint to collect the data periodically.
+
+### **Example**:
+Imagine you're running an e-commerce platform like RevShop, and you want to monitor how many orders are processed per minute and the performance of the `OrderService`.
+
+- **Micrometer** will collect data such as:
+  - Number of orders processed (e.g., 100 orders in the last minute).
+  - Average time taken to process an order (e.g., 200 ms).
+  - Error rates (e.g., 5 failed orders in the last minute).
+
+- **Prometheus** scrapes this data from your `OrderService` via an exposed endpoint, collects it, and stores it for analysis.
+
+### **Use Case**:
+You can then use Prometheus to monitor this data in real-time and set up **alerts**. For example:
+- If the number of processed orders suddenly drops (indicating an issue with `OrderService` or `InventoryService`), you can get notified.
+- If the time taken to process orders spikes (indicating a performance bottleneck), Prometheus will alert you to investigate further.
+
+---
+
+### **Summary**:
+**Prometheus** is used to continuously monitor your microservices by collecting real-time metrics like the number of processed orders or request times. These metrics are exposed by **Micrometer** in a format that Prometheus can scrape, allowing you to keep track of your system's health and performance, ensuring smooth operations in your e-commerce platform.
+
+================================================================================================================================================================
+
+Prometheus and Zipkin both provide monitoring and observability for your application, but they serve different purposes and track different types of data. Here's a breakdown of the key differences:
+
+1. Prometheus – Metrics Monitoring:
+Purpose: Prometheus is a metrics and monitoring system designed to track and alert on numerical data over time.
+What it tracks:
+Quantitative metrics like CPU usage, memory consumption, number of requests, errors, or how many orders are processed.
+Time-series data: Prometheus collects metrics over time, storing them in a database. You can query it to see trends (e.g., how many orders were processed in the last hour).
+Scraping: Prometheus scrapes (pulls) data from services at regular intervals, typically through an endpoint like /actuator/prometheus.
+Use case: Ideal for monitoring performance and system health over time, such as checking if a service's response time is increasing, or the number of processed orders is dropping.
+Alerting: Prometheus supports alerting when metrics exceed thresholds (e.g., if error rates spike).
+Example in Your Project:
+Prometheus can track how many orders are processed by your OrderService, how long each request takes, and if there are any failures in real-time. It collects this data in numerical form and stores it for analysis.
